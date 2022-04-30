@@ -1,8 +1,14 @@
 const http = require('http');
 const app = require('./App');
-const socket = require('socket.io');
 const server = http.createServer(app);
-const { port: port } = require('./config/secret');
+const io = require('socket.io')(server);
+const { port } = require('./config/secret');
+const { Socket } = require('engine.io');
+
+io.on('connection', (Socket) => {
+   //    console.log('a user just connected');
+   //    Socket.on('welcome to first-loop');
+});
 
 async function startServer(server) {
    server.listen(port, () => {
@@ -10,4 +16,5 @@ async function startServer(server) {
    });
 }
 startServer(server);
+
 // console.log(port)
