@@ -1,8 +1,10 @@
 const express = require('express');
-const { rmSync } = require('fs');
 const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const errHandler = require('./src/controllers/err/errorHandler');
+const Error = require('./utils/Error');
+const version1 = require('nodemon/lib/version');
 
 const app = express();
 
@@ -17,8 +19,16 @@ app.use('/', (req, res, next) => {
    });
 });
 
-//global express error handler
+app.use(version1);
 
-app.use()
+//unhandled routes
+app.use('*', (req, res, next) => {
+   return next(
+      new Error(`can't find this ${req.originalUrl} on this server`, 404)
+   );
+});
+
+//global express error handler
+app.use(errHandler);
 
 module.exports = app;
