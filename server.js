@@ -6,8 +6,9 @@ const { port } = require('./config/secret');
 const { Socket } = require('engine.io');
 
 io.on('connection', (Socket) => {
-   //    console.log('a user just connected');
-   //    Socket.on('welcome to first-loop');
+   Socket.emit('welcome to first-loop', (message) => {
+      //    console.log('a user just connected');
+   });
 });
 
 async function startServer(server) {

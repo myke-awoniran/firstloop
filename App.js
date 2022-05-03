@@ -17,4 +17,8 @@ app.use('/', (req, res, next) => {
    });
 });
 
+//global express error handler
+
+app.use()
+
 module.exports = app;
