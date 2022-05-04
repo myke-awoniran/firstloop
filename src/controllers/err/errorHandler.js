@@ -1,8 +1,25 @@
 function errHandler(err, req, res, next) {
-   const message = `${err.statusCode}`.startsWith('4') ? 'fail' : 'error';
-   res.status(err.statusCode).json({
-      status: message,
-      error: { err, message: err.message, stack: err.stack },
+   process.env.NODE_ENV === 'production'
+      ? handleProdErr(err, res)
+      : handleDevErr(err, res);
+}
+
+module.exports = errHandler;
+
+function handleProdErr(err, res) {
+   return res.status(500).json({
+      status: statMessage,
+      error: {
+         err,
+      },
    });
 }
-module.exports = errHandler;
+
+function handleDevErr(err, res) {
+   return res.status(500).json({
+      status: statMessage,
+      error: {
+         err,
+      },
+   });
+}

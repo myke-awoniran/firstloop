@@ -5,7 +5,8 @@
   "main": "App.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon server.js"
+    "start": "NODE_ENV='production' npx nodemon server.js",
+    "dev":"NODE_ENV='development' nodemon server.js"
   },
   "author": "michael",
   "license": "ISC",
