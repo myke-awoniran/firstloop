@@ -2,10 +2,10 @@ const Mongoose = require('mongoose');
 const UserSchema = Mongoose.Schema({
    //denormalized documents
    names: {
-      firstName: { type: String, trim: true, required: true },
-      middleName: { type: String, trim: true, required: true },
-      lastName: { type: String, trim: true, required: true },
-      username: { type: String, trim: true, required: true },
+      first_name: { type: String, trim: true, required: true },
+      middle_name: { type: String, trim: true, required: true },
+      last_name: { type: String, trim: true, required: true },
+      user_name: { type: String, trim: true, required: true, unique: true },
    },
 
    //document
