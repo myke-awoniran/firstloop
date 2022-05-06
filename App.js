@@ -3,9 +3,11 @@ const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
-const errHandler = require('./src/controllers/err/errorHandler');
-const Error = require('./utils/Error');
+const session = require('express-session');
+const config = require('./config/secret');
+const AppError = require('./utils/Error');
 const version1 = require('./src/versions/version1');
+const errHandler = require('./src/controllers/err/errorHandler');
 
 const app = express();
 
@@ -13,6 +15,13 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan('combined'));
 app.use(bodyParser.json());
+app.use(
+   session({
+      secret: config.session,
+      resave: true,
+      saveUninitialized: true,
+   })
+);
 
 app.get('/', (req, res, next) => {
    res.status(200).json({
@@ -26,7 +35,7 @@ app.use(version1);
 //unhandled routes
 app.use('*', (req, res, next) => {
    return next(
-      new Error(`can't find this ${req.originalUrl} on this server`, 404)
+      new AppError(`can't find this ${req.originalUrl} on this server`, 404)
    );
 });
 

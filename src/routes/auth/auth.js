@@ -3,11 +3,17 @@ const {
    HttpRegister,
    HttpLogin,
    HttpUpdateUserCredentials,
+   HttpCheckLoggedIn,
 } = require('../../controllers/auth/authController');
 
 router.post('/register', HttpRegister);
 
-router.post('/login', HttpLogin);
-router.patch('/update-credentials/:id', HttpUpdateUserCredentials);
+router.post('/login/:phone', HttpLogin);
+
+router.patch(
+   '/update-credentials',
+   HttpCheckLoggedIn,
+   HttpUpdateUserCredentials
+);
 
 module.exports = router;
