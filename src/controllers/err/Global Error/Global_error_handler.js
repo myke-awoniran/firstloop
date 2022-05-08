@@ -1,4 +1,4 @@
-const AppError = require('../../../utils/Error');
+const AppError = require('../Operational Error/Operational_Error');
 
 function errHandler(err, req, res, next) {
    if (process.env.NODE_ENV === 'production') {

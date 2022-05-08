@@ -1,24 +1,14 @@
-const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-function generateToken() {
-   const randomToken = Math.floor(100000 + Math.random() * 900000).toString();
-   return randomToken;
+async function signToken(id) {
+   return await jwt.sign({ id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES,
+   });
 }
-
-async function createHash(string) {
-   return await bcrypt.hash(string, 10);
+async function verifyToken(id, userToken) {
+   return await jwt.verify(id, token);
 }
-
-async function verify(token, userToken) {
-   return await bcrypt.compare(token, userToken);
-}
-async function existingUser(phone, model) {
-   return await model.findOne({ phone });
-}
-
 module.exports = {
-   generateToken,
-   createHash,
-   verify,
-   existingUser,
+   signToken,
+   verifyToken,
 };

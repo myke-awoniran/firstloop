@@ -5,23 +5,25 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const config = require('./config/secret');
-const AppError = require('./utils/Error');
+const AppError = require('./src/controllers/err/Operational Error/Operational_Error');
 const version1 = require('./src/versions/version1');
-const errHandler = require('./src/controllers/err/errorHandler');
+const errHandler = require('./src/controllers/err/Global Error/Global_error_handler');
 
 const app = express();
 
 app.use(cors());
+
 app.use(helmet());
 app.use(morgan('combined'));
 app.use(bodyParser.json());
-app.use(
-   session({
-      secret: config.session,
-      resave: true,
-      saveUninitialized: true,
-   })
-);
+
+// app.use(
+//    session({
+//       secret: config.session,
+//       resave: true,
+//       saveUninitialized: true,
+//    })
+// );
 
 app.get('/', (req, res, next) => {
    res.status(200).json({
