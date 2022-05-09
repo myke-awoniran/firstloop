@@ -6,7 +6,7 @@ const User = require('../../database/models/userModel');
 const AsyncError = require('../err/Async Error/asyncError');
 const AppError = require('../err/Operational Error/Operational_Error');
 const { existingUser, signToken } = require('../../../utils/helperFunctions');
-const sendSms = require('../../notifications/verification_message/verification.message');
+const response = require('../../../utils/response');
 
 exports.HttpRegister = AsyncError(async (req, res, next) => {
    const user = await User.create(req.body);
@@ -17,7 +17,7 @@ exports.HttpLogin = AsyncError(async (req, res, next) => {
    if (!req.body.email || !req.body.password)
       return next(new AppError('kindly provide username and password', 400));
    const existingUser = await User.findOne(
-      { email: req.body.email },
+      { email: req.body.email, name: { user_name: req.body.email } },
       { password: 1 }
    );
    if (
@@ -35,7 +35,7 @@ exports.HttpCheckLoggedIn = AsyncError(async (req, res, next) => {});
 
 exports.HttpUpdateUserCredentials = AsyncError(async (req, res, next) => {
    const user = await User.findOneAndUpdate(req.user, req.body, {
-      runValidators: false,
+      runValidators: true,
    });
    if (!user) return next(new AppError(`register to get started`, 401));
    response(res, 200, user);

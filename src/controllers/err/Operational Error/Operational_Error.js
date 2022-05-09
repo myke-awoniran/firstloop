@@ -1,3 +1,4 @@
+// for marking operational errors so as to send meaning ful error messages to users
 class AppError extends Error {
    constructor(message, statusCode) {
       super(message);

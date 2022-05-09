@@ -25,6 +25,11 @@ const UserSchema = Mongoose.Schema(
          },
       },
 
+      googleId: {
+         type: String,
+         select: false,
+      },
+
       // private document
 
       phone: {
@@ -53,6 +58,9 @@ const UserSchema = Mongoose.Schema(
          type: String,
          default: 'avatar.jpg',
       },
+      coverPhoto: {
+         type: String,
+      },
 
       passwordResetToken: {
          type: String,
@@ -75,6 +83,17 @@ const UserSchema = Mongoose.Schema(
          default: false,
          select: false,
       },
+
+      groupAdmin: [
+         {
+            type: Mongoose.Schema.ObjectId,
+            ref: 'Groups',
+            admin: {
+               Boolean,
+               default: true,
+            },
+         },
+      ],
 
       //normalized collections
 
@@ -112,6 +131,12 @@ const UserSchema = Mongoose.Schema(
             ref: 'replies',
          },
       ],
+      calls: [
+         {
+            type: Mongoose.Schema.ObjectId,
+            ref: 'calls',
+         },
+      ],
 
       gender: {
          type: String,
@@ -126,7 +151,7 @@ const UserSchema = Mongoose.Schema(
    { timestamps: true }
 );
 
-UserSchema.index({ name: 1, notifications: 1, chats: 1 });
+UserSchema.index({ name: 1, notifications: 1, chats: 1, comments: 1 });
 
 UserSchema.pre('save', async function (next) {
    if (this.isModified('password')) {

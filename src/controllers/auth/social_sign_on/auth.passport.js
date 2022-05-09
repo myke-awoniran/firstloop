@@ -1,5 +1,6 @@
-const res = require('express/lib/response');
 const AppError = require('../../err/Operational Error/Operational_Error');
+const User = require('../../../database/models/userModel');
+const response = require('../../../../utils/response');
 
 //  config client details
 const config = {
@@ -15,16 +16,43 @@ const AUTH_OPTIONS = {
 const CALL_BACK_FAILURE = {
    failureRedirect: 'api/v1/failure',
    successRedirect: '/',
-   session: false,
+   session: true,
 };
 
-function verifyCallback(accessToken, refreshToken, profile, done) {
-   console.log(profile, accessToken, refreshToken);
-   done(null, profile);
+function NEW_GOOGLE_SIGN_UP(profile) {
+   return {
+      names: {
+         first_name: profile._json.given_name,
+         last_name: profile._json.family_name,
+         middle_name: profile._json.family_name,
+         user_name: profile._json.email,
+      },
+      email: profile._json.email,
+      googleId: profile.id,
+      profilePic: profile._json.picture,
+   };
+}
+
+async function verifyCallback(accessToken, refreshToken, profile, Done) {
+   try {
+      const user = await User.findOne({ googleId: profile.id, active: true });
+      if (user) return Done(null, user);
+      const newUser = await User.create(NEW_GOOGLE_SIGN_UP(profile));
+   } catch (err) {
+      return next(new AppError('an error occurred, kindly try again', 400));
+   }
+   Done(null, profile);
 }
 
 function HttpGoogleOauthFailure(req, res, next) {
    return next(new AppError('failed to sign in, try again!!'));
+}
+
+function authenticated(req, res, next) {
+   if (req.isAuthenticated()) return next();
+   return next(
+      new AppError(`you're not logged in,kindly login to access`, 401)
+   );
 }
 
 module.exports = {
@@ -32,4 +60,5 @@ module.exports = {
    verifyCallback,
    CALL_BACK_FAILURE,
    AUTH_OPTIONS,
+   authenticated,
 };
