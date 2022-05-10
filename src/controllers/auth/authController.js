@@ -14,12 +14,19 @@ exports.HttpRegister = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpLogin = AsyncError(async (req, res, next) => {
-   if (!req.body.email || !req.body.password)
-      return next(new AppError('kindly provide username and password', 400));
-   const existingUser = await User.findOne(
-      { email: req.body.email, name: { user_name: req.body.email } },
-      { password: 1 }
-   );
+   let existingUser;
+   if (!req.body.query || !req.body.password)
+      return next(
+         new AppError('kindly provide email/username and password', 400)
+      );
+   req.body.query.includes('@')
+      ? (existingUser = await User.findOne(
+           { email: req.body.query },
+           { password: 1 }
+        ))
+      : (existingUser = await User.findOne({
+           name: { username: req.body.query },
+        }));
    if (
       !existingUser ||
       !(await existingUser.comparePassword(
@@ -27,7 +34,7 @@ exports.HttpLogin = AsyncError(async (req, res, next) => {
          existingUser.password
       ))
    )
-      return next(new AppError(`opps, invalid user name or password`, 401));
+      return next(new AppError(`opps, invalid username or password`, 401));
    response(res, 200, 'login successful!', await signToken(existingUser._id));
 });
 
