@@ -11,17 +11,15 @@ const UserSchema = Mongoose.Schema(
          middle_name: {
             type: String,
             trim: true,
-            required: [true, 'kindly input your name'],
          },
          last_name: {
             type: String,
             trim: true,
-            required: [true, 'kindly input your name'],
          },
          user_name: {
             type: String,
             trim: true,
-            unique: [true, 'user already exist'],
+            unique: [true, 'username already exist'],
          },
       },
 

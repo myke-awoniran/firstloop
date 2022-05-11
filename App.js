@@ -5,6 +5,8 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const config = require('./config/secret');
+const passport = require('passport');
+
 const AppError = require('./src/controllers/err/Operational Error/Operational_Error');
 const version1 = require('./src/versions/version1');
 const errHandler = require('./src/controllers/err/Global Error/Global_error_handler');
@@ -12,6 +14,16 @@ const errHandler = require('./src/controllers/err/Global Error/Global_error_hand
 const app = express();
 
 app.use(cors());
+
+// app.use(passport.initialize());
+
+// passport.serializeUser((user, done) => {
+//    done(null, user.id);
+// });
+
+// passport.deserializeUser((id, done) => {
+//    User.findById(id);
+// });
 
 app.use(helmet());
 app.use(morgan('combined'));

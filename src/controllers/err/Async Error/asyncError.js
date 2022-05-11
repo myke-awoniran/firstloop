@@ -3,5 +3,4 @@ function AsyncError(fn) {
       fn(req, res, next).catch(next);
    };
 }
-
 module.exports = AsyncError;

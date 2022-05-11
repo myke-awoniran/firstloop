@@ -8,7 +8,11 @@ async function signToken(id) {
 async function verifyToken(id, userToken) {
    return await jwt.verify(id, token);
 }
+async function existingModel(email, Model) {
+   return await Model.findOne({ email });
+}
 module.exports = {
    signToken,
    verifyToken,
+   existingModel,
 };

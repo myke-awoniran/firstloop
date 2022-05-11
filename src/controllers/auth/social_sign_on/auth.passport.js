@@ -1,64 +1,107 @@
-const AppError = require('../../err/Operational Error/Operational_Error');
-const User = require('../../../database/models/userModel');
+const axios = require('axios');
+const querystring = require('query-string');
 const response = require('../../../../utils/response');
+const User = require('../../../database/models/userModel');
+const { signToken } = require('../../../../utils/helperFunctions');
+const AppError = require('../../err/Operational Error/Operational_Error');
+const { CredentialInstance } = require('twilio/lib/rest/chat/v1/credential');
 
-//  config client details
 const config = {
    CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
    CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-};
-const AUTH_OPTIONS = {
-   callbackURL: '/api/v1/auth/google/callback',
-   clientID: config.CLIENT_ID,
-   clientSecret: config.CLIENT_SECRET,
+   redirect_URI: 'api/v1auth/google/callback',
 };
 
-const CALL_BACK_FAILURE = {
-   failureRedirect: 'api/v1/failure',
-   successRedirect: '/',
-   session: true,
-};
-
-function NEW_GOOGLE_SIGN_UP(profile) {
+function createUser(googleUser) {
    return {
       names: {
-         first_name: profile._json.given_name,
-         last_name: profile._json.family_name,
-         middle_name: profile._json.family_name,
-         user_name: profile._json.email,
+         first_name: googleUser.data.given_name,
+         last_name: googleUser.data.family_name,
+         middle_name: googleUser.data.given_name,
+         user_name: googleUser.data.email.split('@')[0],
       },
-      email: profile._json.email,
-      googleId: profile.id,
-      profilePic: profile._json.picture,
+      googleId: googleUser.data.id,
+      profilePic: googleUser.data.picture,
+      email: googleUser.data.email,
    };
 }
 
-async function verifyCallback(accessToken, refreshToken, profile, Done) {
+function getGoogleAuthURL() {
+   const rootUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
+   const options = {
+      redirect_uri: 'http://localhost:3000/api/v1/auth/google/callback',
+      client_id: config.CLIENT_ID,
+      access_type: 'offline',
+      response_type: 'code',
+      prompt: 'consent',
+      scope: [
+         'https://www.googleapis.com/auth/userinfo.profile',
+         'https://www.googleapis.com/auth/userinfo.email',
+      ].join(' '),
+   };
+   return `${rootUrl}?${querystring.stringify(options)}`;
+}
+
+function HttpReturnGoogleLink(req, res, next) {
+   res.redirect(getGoogleAuthURL());
+}
+
+async function getTokens(credentialOject) {
+   const url = 'https://oauth2.googleapis.com/token';
+   const values = {
+      code: credentialOject.code,
+      client_id: credentialOject.clientId,
+      client_secret: credentialOject.clientSecret,
+      redirect_uri: credentialOject.redirectUri,
+      grant_type: 'authorization_code',
+   };
+   const response = await axios.post(url, querystring.stringify(values), {
+      headers: {
+         'Content-Type': 'application/x-www-form-urlencoded',
+      },
+   });
+   if (!response) return next(new AppError('failed to fetch tokens', 400));
+   return response.data;
+}
+
+async function HttpGetUserCredential(req, res, next) {
    try {
-      const user = await User.findOne({ googleId: profile.id, active: true });
-      if (user) return Done(null, user);
-      const newUser = await User.create(NEW_GOOGLE_SIGN_UP(profile));
+      const code = req.query.code;
+      const { id_token, access_token } = await getTokens({
+         code,
+         clientId: config.CLIENT_ID,
+         clientSecret: config.CLIENT_SECRET,
+         redirectUri: 'http://localhost:3000/api/v1/auth/google/callback',
+      });
+      //fetching the user from the access token
+      const googleUser = await axios.get(
+         `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`,
+         {
+            headers: {
+               Authorization: `Bearer ${id_token}`,
+            },
+         }
+      );
+      // console.log(googleUser);
+      if (!googleUser) return next(new AppError('failed to fetch user ', 500));
+      const registeredUser = await User.findOne({
+         googleId: googleUser.data.id,
+      });
+      if (registeredUser)
+         return response(
+            res,
+            200,
+            'login successful',
+            await signToken(registeredUser._id)
+         );
+      const newUser = await User.create(createUser(googleUser));
+      response(res, 200, 'login successful', await signToken(newUser._id));
    } catch (err) {
-      return next(new AppError('an error occurred, kindly try again', 400));
+      console.log(err.message);
    }
-   Done(null, profile);
-}
-
-function HttpGoogleOauthFailure(req, res, next) {
-   return next(new AppError('failed to sign in, try again!!'));
-}
-
-function authenticated(req, res, next) {
-   if (req.isAuthenticated()) return next();
-   return next(
-      new AppError(`you're not logged in,kindly login to access`, 401)
-   );
 }
 
 module.exports = {
-   HttpGoogleOauthFailure,
-   verifyCallback,
-   CALL_BACK_FAILURE,
-   AUTH_OPTIONS,
-   authenticated,
+   HttpReturnGoogleLink,
+   HttpGetUserCredential,
 };
