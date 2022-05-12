@@ -35,7 +35,7 @@ class Email {
       await this.newTransport().sendMail(mailOptions);
    }
    async sendWelcome() {
-      await this.send('welcome', 'welcome to Gobble foods');
+      await this.send('welcome', 'welcome to First-Loop');
    }
    async sendPasswordReset() {
       await this.send(
