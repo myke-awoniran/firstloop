@@ -5,11 +5,12 @@ const AppError = require('../../controllers/err/Operational Error/Operational_Er
 
 const selectOptions = {
    chats: 0,
-   call: 0,
+   calls: 0,
    __v: 0,
    active: 0,
    password: 0,
    notifications: 0,
+   comments: 0,
 };
 
 exports.HttpUpdateUserCredentials = AsyncError(async (req, res, next) => {
@@ -21,13 +22,39 @@ exports.HttpUpdateUserCredentials = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpGetUser = AsyncError(async (req, res, next) => {
-   const loggedInUser = await User.findOne(req.user._id, selectOptions);
+   const loggedInUser = await User.findById(req.user._id);
    response(res, 200, loggedInUser);
 });
 
 exports.HttpDeleteAccount = AsyncError(async (req, res, next) => {
-   const loggedInUser = await User.findByIdAndUpdate(req.user.id, {
+   await User.findByIdAndUpdate(req.user.id, {
       active: false,
    });
    response(res, 200, 'account deleted !!');
+});
+
+exports.HttpGetAllUsers = AsyncError(async (req, res, next) => {
+   const users = await User.find({ active: true }, selectOptions);
+   response(res, 200, users);
+});
+
+exports.HttpRemoveUser = AsyncError(async (req, res, next) => {
+   if (req.user._id == req.params.id)
+      return next(
+         new AppError(
+            `you can't remove your own account, kindly contact support`,
+            400
+         )
+      );
+   const user = await User.findByIdAndDelete(req.params.id);
+   if (!user)
+      return next(new AppError('cannot find any user with the id', 404));
+   response(res, 200, 'user deleted successful');
+});
+
+exports.HttpGetUserByID = AsyncError(async (req, res, next) => {
+   const user = await User.findById(req.params.id);
+   if (!user)
+      return next(new AppError('there is no user with the provided Id', 404));
+   response(res, 200, user);
 });

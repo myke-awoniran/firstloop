@@ -1,0 +1,11 @@
+Hi [firstName],
+
+Thanks for joining us at [name of company].
+
+We built [product] as [story behind it].
+
+We’d love to know why you signed up for [product]. Your feedback helps us to make sure that we’re delivering exactly what customers want. Just hit reply and let me know.
+
+Over the next few weeks, we’ll be sending you a few more emails to help you gain maximum value from [product]. We’ll share our favorite tips and provide some exciting behind-the-scenes information.
+
+Thanks!

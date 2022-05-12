@@ -3,10 +3,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const config = require('./config/secret');
-const passport = require('passport');
-
 const AppError = require('./src/controllers/err/Operational Error/Operational_Error');
 const version1 = require('./src/versions/version1');
 const errHandler = require('./src/controllers/err/Global Error/Global_error_handler');
@@ -41,9 +38,11 @@ app.get('/', (req, res, next) => {
    res.status(200).json({
       status: 200,
       message: 'welcome to first-loop chat-app',
+      description: `Discuss any topic, dive into people's interests, hobbies, passions and more ...`,
    });
 });
 
+//HANDLING VERSIONS
 app.use(version1);
 
 //unhandled routes

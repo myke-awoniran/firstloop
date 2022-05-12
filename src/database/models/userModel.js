@@ -50,6 +50,7 @@ const UserSchema = Mongoose.Schema(
       },
       password: {
          type: String,
+         select: false,
       },
 
       profilePic: {
@@ -65,7 +66,7 @@ const UserSchema = Mongoose.Schema(
          select: false,
       },
 
-      passwordResetTOkenExpires: {
+      passwordResetTokenExpires: {
          type: String,
          select: false,
       },
@@ -74,6 +75,12 @@ const UserSchema = Mongoose.Schema(
       active: {
          type: Boolean,
          default: true,
+      },
+      role: {
+         type: String,
+         enum: ['user', 'admin'],
+         select: false,
+         default: 'user',
       },
 
       verified: {

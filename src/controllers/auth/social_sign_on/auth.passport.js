@@ -4,7 +4,6 @@ const response = require('../../../../utils/response');
 const User = require('../../../database/models/userModel');
 const { signToken } = require('../../../../utils/helperFunctions');
 const AppError = require('../../err/Operational Error/Operational_Error');
-const { CredentialInstance } = require('twilio/lib/rest/chat/v1/credential');
 
 const config = {
    CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
@@ -82,10 +81,10 @@ async function HttpGetUserCredential(req, res, next) {
             },
          }
       );
-      // console.log(googleUser);
       if (!googleUser) return next(new AppError('failed to fetch user ', 500));
       const registeredUser = await User.findOne({
          googleId: googleUser.data.id,
+         active: true,
       });
       if (registeredUser)
          return response(
