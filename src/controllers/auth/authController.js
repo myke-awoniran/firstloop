@@ -2,10 +2,10 @@
  * Awoniran */
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const Email = require('../../email/email');
 const response = require('../../../utils/response');
 const User = require('../../database/models/userModel');
 const AsyncError = require('../err/Async Error/asyncError');
-const Email = require('../../email/email');
 const AppError = require('../err/Operational Error/Operational_Error');
 const { signToken, existingModel } = require('../../../utils/helperFunctions');
 
