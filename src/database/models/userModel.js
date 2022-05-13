@@ -156,7 +156,7 @@ const UserSchema = Mongoose.Schema(
    { timestamps: true }
 );
 
-UserSchema.index({ name: 1, notifications: 1, chats: 1, comments: 1 });
+// UserSchema.index({ name: 1, chats: 1, comments: 1 });
 
 UserSchema.pre('save', async function (next) {
    if (this.isModified('password')) {

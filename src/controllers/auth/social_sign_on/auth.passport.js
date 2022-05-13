@@ -4,6 +4,7 @@ const response = require('../../../../utils/response');
 const User = require('../../../database/models/userModel');
 const { signToken } = require('../../../../utils/helperFunctions');
 const AppError = require('../../err/Operational Error/Operational_Error');
+const Email = require('../../../email/email');
 
 const config = {
    CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
@@ -94,9 +95,15 @@ async function HttpGetUserCredential(req, res, next) {
             await signToken(registeredUser._id)
          );
       const newUser = await User.create(createUser(googleUser));
+      await new Email(newUser, undefined).sendWelcome();
       response(res, 200, 'login successful', await signToken(newUser._id));
    } catch (err) {
-      console.log(err.message);
+      return next(
+         new AppError(
+            'An error occurred, check your internet connection and try again',
+            500
+         )
+      );
    }
 }
 

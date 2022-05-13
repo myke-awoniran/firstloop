@@ -1,18 +1,19 @@
 /** micheal
  * Awoniran */
-const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const response = require('../../../utils/response');
 const User = require('../../database/models/userModel');
 const AsyncError = require('../err/Async Error/asyncError');
+const Email = require('../../email/email');
 const AppError = require('../err/Operational Error/Operational_Error');
 const { signToken, existingModel } = require('../../../utils/helperFunctions');
 
 exports.HttpRegister = AsyncError(async (req, res, next) => {
    if (await existingModel(req.body.email, User))
       return next(new AppError('Account already exist', 400));
-   await User.create(req.body);
+   const user = await User.create(req.body);
+   await new Email(user, undefined).sendWelcome();
    response(res, 201, 'Account created successfully');
 });
 
@@ -32,12 +33,10 @@ exports.HttpLogin = AsyncError(async (req, res, next) => {
         ))
       : (existingUser = await User.findOne(
            {
-              name: { user_name: req.body.query },
+              'names.user_name': `${req.body.query}`,
            },
-
-           { password: 1, names: 1 }
+           { password: 1 }
         ));
-   // console.log(existingUser);
    if (
       !existingUser ||
       !(await existingUser.comparePassword(
@@ -85,41 +84,48 @@ exports.HttpRestrictedTo = (...roles) => {
 };
 
 exports.HttpForgotPassword = async (req, res, next) => {
-   const user = await User.findOne({ email: req.body.email, active: true });
-   if (!user)
-      return next(
-         new AppError('no user registered with the provided email', 400)
-      );
+   const user = await existingModel(req.body.email, User);
+   if (!user) return next(new AppError('Account does not exist', 400));
    const randomBytes = crypto.randomBytes(32).toString('hex');
    const resetToken = crypto
       .createHash('sha256')
       .update(randomBytes)
       .digest('hex');
-
    user.passwordResetToken = resetToken;
    user.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
    await user.save();
    try {
-      console.log('token sent successfully');
+      const resetURL = `http://localhost:3000/api/v1/reset-password/${randomBytes}`;
+      await new Email(user, resetURL).sendPasswordReset();
+      response(res, 200, 'token sent to email');
    } catch (err) {
       user.passwordResetToken = undefined;
       user.passwordResetTokenExpires = undefined;
       user.save();
+      console.log(err);
       return next(
-         new AppError('An error occurred my boss, kindly try again !! ')
+         new AppError(
+            'An error occurred while sending the email my boss, kindly consider trying again !! '
+         )
       );
    }
-   //collect the user email
-   // generate a random bytes
-   //encrypt the random email
-   // save a copy into the database
-   // send a copy to the user email
 };
 
 exports.HttpResetPassword = AsyncError(async (req, res, next) => {
-   // find the user with the params token
-   // compare the token
-   // if token is valid
-   // change the user password
-   // set the token to invalid in the database
+   const hashedToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
+   const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetTokenExpires: { $gt: Date.now() },
+   });
+   if (!user) return next(new AppError('token expired or invalid', 400));
+   if (req.body.password !== req.body.passwordConfirm)
+      return next(new AppError('password not match', 400));
+   user.password = req.body.password;
+   user.passwordResetToken = undefined;
+   user.passwordResetTokenExpires = undefined;
+   await user.save();
+   response(res, 200, 'reset successful');
 });

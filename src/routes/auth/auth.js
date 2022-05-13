@@ -9,14 +9,16 @@ const {
 const {
    HttpRegister,
    HttpLogin,
+   HttpForgotPassword,
+   HttpResetPassword,
 } = require('../../controllers/auth/authController');
 
 // user with email and password
 
 router.post('/register', HttpRegister);
 router.post('/sign-in', HttpLogin);
-router.post('/forgot-password', HttpLogin);
-router.post('/reset-password', HttpLogin);
+router.post('/forgot-password', HttpForgotPassword);
+router.post('/reset-password/:token', HttpResetPassword);
 
 //using google to sign in user
 router.get('/auth/google/url', HttpReturnGoogleLink);

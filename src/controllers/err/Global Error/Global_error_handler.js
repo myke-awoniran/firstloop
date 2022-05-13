@@ -27,6 +27,7 @@ function handleDevErr(err, res) {
       status: 'error',
       err,
       message: err.message,
+      stack: err.stack,
    });
 }
 
