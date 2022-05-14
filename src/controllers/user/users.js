@@ -58,3 +58,13 @@ exports.HttpGetUserByID = AsyncError(async (req, res, next) => {
       return next(new AppError('there is no user with the provided Id', 404));
    response(res, 200, user);
 });
+
+// get personal informations
+exports.HttpGetUserPosts = AsyncError(async (req, res, next) => {
+   const userPosts = await User.find(
+      { _id: req.user.id },
+      { posts: true }
+   ).populate({ path: 'posts', select: '-__v' });
+   if (!userPosts.length) return next(new AppError('user posts empty', 400));
+   response(res, 200, userPosts[0].posts);
+});

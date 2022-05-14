@@ -1,12 +1,47 @@
 const Mongoose = require('mongoose');
-
 const postSchema = Mongoose.Schema({
-   post: String,
-   likeBy: {
+   // post schema
+   post: {
+      type: String,
+      trim: true,
+   },
+
+   likeBy: [
+      {
+         type: Mongoose.Schema.ObjectId,
+         ref: 'User',
+      },
+   ],
+
+   PostImage: [
+      {
+         type: String,
+      },
+   ],
+
+   comments: [
+      {
+         type: Mongoose.Schema.ObjectId,
+         ref: 'User',
+      },
+   ],
+
+   shareBy: [
+      {
+         type: Mongoose.Schema.ObjectId,
+         ref: 'User',
+      },
+   ],
+
+   creator: {
       type: Mongoose.Schema.ObjectId,
       ref: 'User',
    },
-   date: Date.now,
+
+   date: {
+      type: Date,
+      default: Date.now(),
+   },
 });
 
-module.exports = Mongoose.model('Comment', postSchema);
+module.exports = Mongoose.model('Post', postSchema);

@@ -142,7 +142,12 @@ const UserSchema = Mongoose.Schema(
             ref: 'calls',
          },
       ],
-
+      posts: [
+         {
+            type: Mongoose.Schema.ObjectId,
+            ref: 'Post',
+         },
+      ],
       gender: {
          type: String,
          enum: ['male', 'female'],
