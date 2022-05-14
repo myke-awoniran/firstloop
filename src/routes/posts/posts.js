@@ -20,4 +20,5 @@ router
    .get(HttpCheckLoggedIn, HttpGetPost)
    .delete(HttpCheckLoggedIn, HttpDeletePost);
 
+router.post('/posts/likes/:postId', HttpCheckLoggedIn, HttpLikePost);
 module.exports = router;

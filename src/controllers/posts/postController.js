@@ -1,5 +1,6 @@
-const Post = require('../../database/models/postModel');
 const response = require('../../../utils/response');
+const Post = require('../../database/models/postModel');
+const Like = require('../../database/models/likesModel');
 const AsyncError = require('../err/Async Error/asyncError');
 const AppError = require('../err/Operational Error/Operational_Error');
 
@@ -28,7 +29,10 @@ exports.HttpGetPost = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpGetAllPosts = AsyncError(async (req, res, next) => {
-   const posts = await Post.find({}, { __v: 0 }).sort('-date');
+   const posts = await Post.find({}, { __v: 0 }).sort('-date').populate({
+      path: 'creator',
+      select: '-__v -posts -chats -notifications -calls',
+   });
    response(res, 200, posts);
 });
 
@@ -43,7 +47,18 @@ exports.HttpEditPost = AsyncError(async (req, res, next) => {
    response(res, 200, post);
 });
 
-exports.HttpLikePost = AsyncError(async (req, res, next) => {});
+exports.HttpLikePost = AsyncError(async (req, res, next) => {
+   const post = await Post.findById(req.params.postId);
+   console.log(post);
+   if (post.likeBy.includes(req.user._id))
+      return next(new AppError('you already like the post'));
+   const newLike = await Like.updateOne({
+      post: req.params.postId,
+   });
+
+   newLike.push(req.user._id);
+   await newLike.save();
+});
 
 exports.HttpSharePost = AsyncError(async (req, res, next) => {});
 
