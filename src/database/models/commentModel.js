@@ -7,7 +7,10 @@ const commentSchema = Mongoose.Schema({
       type: Mongoose.Schema.ObjectId,
       ref: 'User',
    },
-   date: Date.now,
+   date: {
+      type: Date,
+      default: Date.now,
+   },
 });
 
 module.exports = Mongoose.model('Comment', commentSchema);

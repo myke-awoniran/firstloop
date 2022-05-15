@@ -48,18 +48,28 @@ exports.HttpEditPost = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpLikePost = AsyncError(async (req, res, next) => {
-   const post = await Post.findById(req.params.postId);
-   console.log(post);
-   if (post.likeBy.includes(req.user._id))
-      return next(new AppError('you already like the post'));
-   const newLike = await Like.updateOne({
-      post: req.params.postId,
+   const { likeBy } = await Post.findByIdAndUpdate(
+      req.params.postId,
+      {
+         $push: { likeBy: req.user._id },
+      },
+      { new: false, upsert: true }
+   ).populate({ path: 'likeBy', select: 'names' });
+   res.status(200).json({
+      no_of_likes: likeBy.length,
+      like_by: likeBy,
    });
 
-   newLike.push(req.user._id);
-   await newLike.save();
+   // if (post.likeBy.includes(req.user._id))
+   //    return next(new AppError('you already like the post'));
+   // const newLike = await Like.upsert({
+   //    post: req.params.postId,
+   // });
+   // newLike.push(req.user._id);
+   // await newLike.save();
 });
 
+exports.HttpUnlikePost = AsyncError(async (req, res, next) => {});
 exports.HttpSharePost = AsyncError(async (req, res, next) => {});
 
 exports.HttpCommentPost = AsyncError(async (req, res, next) => {});

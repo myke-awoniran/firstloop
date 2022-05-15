@@ -112,7 +112,7 @@ const UserSchema = Mongoose.Schema(
       likes: [
          {
             type: Mongoose.Schema.ObjectId,
-            ref: 'likes',
+            ref: 'post',
          },
       ],
 
