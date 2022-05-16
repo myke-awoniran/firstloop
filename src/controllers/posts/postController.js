@@ -7,7 +7,7 @@ function Options(req) {
    return {
       creator: req.user,
       post: req.body.post,
-      postImage: [req.body.photo],
+      postImage: req.body.photo,
    };
 }
 
@@ -56,6 +56,14 @@ exports.HttpUnlikePost = AsyncError(async (req, res, next) => {
    response(res, 200, 'unliked');
 });
 
-exports.HttpSharePost = AsyncError(async (req, res, next) => {});
+exports.HttpSharePost = AsyncError(async (req, res, next) => {
+   const user = req.user.posts.push(req.params.postId);
+   await req.user.save();
+   response(res, 200, 'shared');
+});
 
-exports.HttpCommentPost = AsyncError(async (req, res, next) => {});
+exports.HttpCommentPost = AsyncError(async (req, res, next) => {
+   // grab the postId
+   // add the comment Id to the comment of the post
+   // populate and send the comment out instantly
+});

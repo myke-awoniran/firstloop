@@ -25,4 +25,6 @@ router
    .route('/posts/likes/:postId')
    .post(HttpCheckLoggedIn, HttpLikePost)
    .patch(HttpCheckLoggedIn, HttpUnlikePost);
+
+router.post('/posts/share/:postId', HttpCheckLoggedIn, HttpSharePost);
 module.exports = router;

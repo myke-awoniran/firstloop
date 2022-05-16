@@ -1,5 +1,5 @@
-const { Schema, model } = require('mongoose');
-const postSchema = Schema(
+const Mongoose = require('mongoose');
+const postSchema = Mongoose.Schema(
    {
       // post schema
       post: {
@@ -14,11 +14,9 @@ const postSchema = Schema(
          },
       ],
 
-      PostImage: [
-         {
-            type: String,
-         },
-      ],
+      PostImage: {
+         type: String,
+      },
 
       comments: [
          {
@@ -46,6 +44,7 @@ const postSchema = Schema(
    },
    { autoIndex: true }
 );
+// console.log(Mongoose);
 
 postSchema.pre(/^find/, async function (next) {
    this.populate({
@@ -64,4 +63,4 @@ postSchema.pre(/^find/, async function (next) {
    next();
 });
 
-module.exports = model('Post', postSchema);
+module.exports = Mongoose.model('Post', postSchema);
