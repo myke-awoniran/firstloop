@@ -1,6 +1,6 @@
-const Mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const NotificationSchema = Mongoose.Schema({
+const NotificationSchema = Schema({
    notification: String,
    Date: Date.now,
    owner: {
@@ -9,4 +9,4 @@ const NotificationSchema = Mongoose.Schema({
    },
 });
 
-module.exports = Mongoose.model('Notification', NotificationSchema);
+module.exports = model('Notification', NotificationSchema);

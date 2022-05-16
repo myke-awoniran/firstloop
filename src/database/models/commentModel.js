@@ -1,6 +1,6 @@
-const Mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const commentSchema = Mongoose.Schema({
+const commentSchema = Schema({
    comment: String,
 
    commentBy: {
@@ -13,4 +13,4 @@ const commentSchema = Mongoose.Schema({
    },
 });
 
-module.exports = Mongoose.model('Comment', commentSchema);
+module.exports = model('Comment', commentSchema);

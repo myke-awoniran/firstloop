@@ -63,7 +63,14 @@ exports.HttpCheckLoggedIn = AsyncError(async (req, res, next) => {
    const payload = await jwt.verify(token, process.env.JWT_SECRET);
    const currentUser = await User.findOne(
       { _id: payload.id },
-      { active: true, role: true, posts: true }
+      {
+         active: true,
+         role: true,
+         posts: true,
+         names: true,
+         chats: true,
+         about: true,
+      }
    );
    if (!currentUser)
       return next(

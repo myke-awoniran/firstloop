@@ -1,12 +1,11 @@
 const response = require('../../../utils/response');
 const Post = require('../../database/models/postModel');
-const Like = require('../../database/models/likesModel');
 const AsyncError = require('../err/Async Error/asyncError');
 const AppError = require('../err/Operational Error/Operational_Error');
 
 function Options(req) {
    return {
-      creator: req.user._id,
+      creator: req.user,
       post: req.body.post,
       postImage: [req.body.photo],
    };
@@ -21,18 +20,11 @@ exports.HttpCreateNewPost = AsyncError(async (req, res, next) => {
 
 exports.HttpGetPost = AsyncError(async (req, res, next) => {
    const post = await Post.findById(req.params.postId);
-   if (!post)
-      return next(
-         new AppError('no post found, this post might be deleted', 404)
-      );
    response(res, 200, post);
 });
 
 exports.HttpGetAllPosts = AsyncError(async (req, res, next) => {
-   const posts = await Post.find({}, { __v: 0 }).sort('-date').populate({
-      path: 'creator',
-      select: '-__v -posts -chats -notifications -calls',
-   });
+   const posts = await Post.find({}, { __v: 0 }).sort('-date');
    response(res, 200, posts);
 });
 
@@ -43,7 +35,6 @@ exports.HttpDeletePost = AsyncError(async (req, res, next) => {
 
 exports.HttpEditPost = AsyncError(async (req, res, next) => {
    const post = await Post.findByIdAndUpdate(req.params.postId, req.body);
-   if (!post) return next(new AppError('post not found', 400));
    response(res, 200, post);
 });
 
@@ -54,22 +45,17 @@ exports.HttpLikePost = AsyncError(async (req, res, next) => {
          $push: { likeBy: req.user._id },
       },
       { new: false, upsert: true }
-   ).populate({ path: 'likeBy', select: 'names' });
-   res.status(200).json({
-      no_of_likes: likeBy.length,
-      like_by: likeBy,
-   });
-
-   // if (post.likeBy.includes(req.user._id))
-   //    return next(new AppError('you already like the post'));
-   // const newLike = await Like.upsert({
-   //    post: req.params.postId,
-   // });
-   // newLike.push(req.user._id);
-   // await newLike.save();
+   );
+   response(res, 200, 'liked');
 });
 
-exports.HttpUnlikePost = AsyncError(async (req, res, next) => {});
+exports.HttpUnlikePost = AsyncError(async (req, res, next) => {
+   const { likeBy } = await Post.findByIdAndUpdate(req.params.postId, {
+      $pull: { likeBy: req.user._id },
+   });
+   response(res, 200, 'unliked');
+});
+
 exports.HttpSharePost = AsyncError(async (req, res, next) => {});
 
 exports.HttpCommentPost = AsyncError(async (req, res, next) => {});

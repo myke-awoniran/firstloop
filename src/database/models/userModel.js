@@ -1,7 +1,7 @@
-const Mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const UserSchema = Mongoose.Schema(
+const UserSchema = Schema(
    {
       names: {
          first_name: {
@@ -109,13 +109,6 @@ const UserSchema = Mongoose.Schema(
          },
       ],
 
-      likes: [
-         {
-            type: Mongoose.Schema.ObjectId,
-            ref: 'post',
-         },
-      ],
-
       friends: [
          {
             type: Mongoose.Schema.ObjectId,
@@ -178,4 +171,4 @@ UserSchema.methods.comparePassword = async function (
    return await bcrypt.compare(userPassword, OriginalPassword);
 };
 
-module.exports = Mongoose.model('User', UserSchema);
+module.exports = model('User', UserSchema);

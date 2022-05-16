@@ -1,7 +1,7 @@
 // for one on one messages
-const Mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const messageSchema = Mongoose.Schema(
+const messageSchema = Schema(
    {
       sender: {
          type: Mongoose.Schema.ObjectId,
@@ -24,4 +24,4 @@ const messageSchema = Mongoose.Schema(
    },
    { timestamps: true }
 );
-module.exports = Mongoose.model('Message', messageSchema);
+module.exports = model('Message', messageSchema);

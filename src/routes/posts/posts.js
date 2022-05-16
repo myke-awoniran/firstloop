@@ -9,6 +9,7 @@ const {
    HttpLikePost,
    HttpSharePost,
    HttpCommentPost,
+   HttpUnlikePost,
 } = require('../../controllers/posts/postController');
 
 router.get('/get-all-posts', HttpGetAllPosts);
@@ -20,5 +21,8 @@ router
    .get(HttpCheckLoggedIn, HttpGetPost)
    .delete(HttpCheckLoggedIn, HttpDeletePost);
 
-router.post('/posts/likes/:postId', HttpCheckLoggedIn, HttpLikePost);
+router
+   .route('/posts/likes/:postId')
+   .post(HttpCheckLoggedIn, HttpLikePost)
+   .patch(HttpCheckLoggedIn, HttpUnlikePost);
 module.exports = router;
