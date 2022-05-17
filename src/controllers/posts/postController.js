@@ -2,6 +2,7 @@ const response = require('../../../utils/response');
 const Post = require('../../database/models/postModel');
 const AsyncError = require('../err/Async Error/asyncError');
 const AppError = require('../err/Operational Error/Operational_Error');
+const Comment = require('../../database/models/commentModel');
 
 function Options(req) {
    return {
