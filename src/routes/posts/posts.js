@@ -27,4 +27,5 @@ router
    .patch(HttpCheckLoggedIn, HttpUnlikePost);
 
 router.post('/posts/share/:postId', HttpCheckLoggedIn, HttpSharePost);
+router.post('/posts/comments/:postId', HttpCheckLoggedIn, HttpCommentPost);
 module.exports = router;

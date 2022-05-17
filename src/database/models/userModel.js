@@ -89,26 +89,6 @@ const UserSchema = Mongoose.Schema(
          select: false,
       },
 
-      groupAdmin: [
-         {
-            type: Mongoose.Schema.ObjectId,
-            ref: 'Groups',
-            admin: {
-               Boolean,
-               default: true,
-            },
-         },
-      ],
-
-      //normalized collections
-
-      chats: [
-         {
-            type: Mongoose.Schema.ObjectId,
-            ref: 'chats',
-         },
-      ],
-
       friends: [
          {
             type: Mongoose.Schema.ObjectId,
@@ -120,13 +100,6 @@ const UserSchema = Mongoose.Schema(
          {
             type: Mongoose.Schema.ObjectId,
             ref: 'notifications',
-         },
-      ],
-
-      comments: [
-         {
-            type: Mongoose.Schema.ObjectId,
-            ref: 'replies',
          },
       ],
       calls: [

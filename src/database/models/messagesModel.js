@@ -11,10 +11,6 @@ const messageSchema = Schema(
          type: String,
          trim: true,
       },
-      chat: {
-         type: Mongoose.Schema.ObjectId,
-         ref: 'Chat',
-      },
       readBy: [
          {
             type: Mongoose.Schema.ObjectId,

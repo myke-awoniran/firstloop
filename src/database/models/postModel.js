@@ -21,14 +21,7 @@ const postSchema = Mongoose.Schema(
       comments: [
          {
             type: Mongoose.Schema.ObjectId,
-            ref: '',
-         },
-      ],
-
-      shareBy: [
-         {
-            type: Mongoose.Schema.ObjectId,
-            ref: 'User',
+            ref: 'Comment',
          },
       ],
 
@@ -42,9 +35,26 @@ const postSchema = Mongoose.Schema(
          default: Date.now(),
       },
    },
-   { autoIndex: true }
+   {
+      autoIndex: true,
+
+      toObject: {
+         virtuals: true,
+      },
+
+      toJSON: {
+         virtuals: true,
+      },
+   }
 );
 // console.log(Mongoose);
+postSchema.virtual('number_of_likes').get(function () {
+   return this.likeBy.length;
+});
+
+postSchema.virtual('number_of_comments').get(function () {
+   return this.comments.length;
+});
 
 postSchema.pre(/^find/, async function (next) {
    this.populate({
@@ -55,10 +65,7 @@ postSchema.pre(/^find/, async function (next) {
          path: 'creator',
          select: 'names profilePic about',
       })
-      .populate({
-         path: 'comments',
-         select: '',
-      });
+      .populate('comments');
 
    next();
 });

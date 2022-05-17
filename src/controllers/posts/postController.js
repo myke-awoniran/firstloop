@@ -1,7 +1,8 @@
 const response = require('../../../utils/response');
 const Post = require('../../database/models/postModel');
 const AsyncError = require('../err/Async Error/asyncError');
-const AppError = require('../err/Operational Error/Operational_Error');
+// const AppError = require('../err/Operational Error/Operational_Error');
+// const Comment = require('../../database/models/commentModel');
 const Comment = require('../../database/models/commentModel');
 
 function Options(req) {
@@ -64,6 +65,15 @@ exports.HttpSharePost = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpCommentPost = AsyncError(async (req, res, next) => {
+   // const newComment = await Comment.create({
+   //    comment: req.body.comment,
+   //    commentBy: req.user._id,
+   // });
+   // const post = await Post.findById(req.params.postId);
+   // post.comments.push(newComment._id);
+   // await post.save();
+   // response(res, 200, post.comments);
+   console.log('I am working now');
    // grab the postId
    // add the comment Id to the comment of the post
    // populate and send the comment out instantly
