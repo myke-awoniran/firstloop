@@ -27,17 +27,20 @@ router.post('/upload-images', HttpCheckLoggedIn, upLoad);
 router.get('/my-posts', HttpCheckLoggedIn, HttpGetUserPosts);
 
 // user routes that are only accessible by admins
-router.get(
-   '/users',
-   HttpCheckLoggedIn,
-   HttpRestrictedTo('admin'),
-   HttpGetAllUsers
-);
+router.get('/users', HttpCheckLoggedIn, HttpGetAllUsers);
 router.delete(
    '/remove-user/:id',
    HttpCheckLoggedIn,
    HttpRestrictedTo('admin'),
    HttpRemoveUser
 );
+
+// routes for friends
+
+router.post('/users/add-friends');
+
+router.get('/my-friends');
+
+router.patch('/users/unfriend');
 
 module.exports = router;

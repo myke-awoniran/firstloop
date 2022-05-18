@@ -59,7 +59,8 @@ exports.HttpGetUserByID = AsyncError(async (req, res, next) => {
    response(res, 200, user);
 });
 
-// get personal informations
+// get personal information
+
 exports.HttpGetUserPosts = AsyncError(async (req, res, next) => {
    const userPosts = await User.find(
       { _id: req.user.id },
@@ -68,3 +69,9 @@ exports.HttpGetUserPosts = AsyncError(async (req, res, next) => {
    if (!userPosts.length) return next(new AppError('user posts empty', 400));
    response(res, 200, userPosts[0].posts);
 });
+
+exports.HttpAddFriend = AsyncError(async (req, res, next) => {});
+
+exports.HttpUnfriendUser = AsyncError(async (req, res, next) => {});
+
+exports.HttpMyFriends = AsyncError(async (req, res, next) => {});
