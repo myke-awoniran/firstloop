@@ -1,5 +1,4 @@
 const router = require('express').Router({ strict: true });
-
 const {
    HttpUpdateUserCredentials,
    HttpGetUser,
@@ -9,12 +8,15 @@ const {
    HttpGetUserByID,
    HttpGetUserPosts,
    HttpAddFriend,
+   HttpMyFriends,
 } = require('../../controllers/user/users');
-const { upLoad } = require('../../file_uploads/AWS/imageFile');
+
 const {
    HttpCheckLoggedIn,
    HttpRestrictedTo,
 } = require('../../controllers/auth/authController');
+
+const { upLoad } = require('../../file_uploads/AWS/imageFile');
 
 router.get('/get-me', HttpCheckLoggedIn, HttpGetUser);
 router.get('/users/:id', HttpCheckLoggedIn, HttpGetUserByID);
@@ -24,7 +26,8 @@ router.patch(
    HttpCheckLoggedIn,
    HttpUpdateUserCredentials
 );
-router.post('/upload-images', HttpCheckLoggedIn, upLoad);
+router.get('/upload-images', HttpCheckLoggedIn, upLoad);
+
 router.get('/my-posts', HttpCheckLoggedIn, HttpGetUserPosts);
 
 // user routes that are only accessible by admins
@@ -40,8 +43,8 @@ router.delete(
 
 router.post('/users/add-friends/:userId', HttpCheckLoggedIn, HttpAddFriend);
 
-router.get('/my-friends');
+router.get('/my-friends', HttpCheckLoggedIn, HttpMyFriends);
 
-router.patch('/users/unfriend');
+router.patch('/unfriend/:userId', HttpCheckLoggedIn);
 
 module.exports = router;

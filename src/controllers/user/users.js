@@ -2,6 +2,7 @@ const User = require('../../database/models/userModel');
 const AsyncError = require('../../controllers/err/Async Error/asyncError');
 const response = require('../../../utils/response');
 const Post = require('../../database/models/postModel');
+
 const AppError = require('../../controllers/err/Operational Error/Operational_Error');
 
 const selectOptions = {
@@ -69,7 +70,12 @@ exports.HttpAddFriend = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpUnfriendUser = AsyncError(async (req, res, next) => {
-   req.user.friends.
+   //
 });
 
-exports.HttpMyFriends = AsyncError(async (req, res, next) => {});
+exports.HttpMyFriends = AsyncError(async (req, res, next) => {
+   const friends = await User.findById(req.user.id, {
+      friends: true,
+   });
+   response(res, 200, friends);
+});

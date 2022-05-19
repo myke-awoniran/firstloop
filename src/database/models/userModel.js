@@ -140,10 +140,6 @@ UserSchema.virtual('number_of_friends').get(function () {
    return this.friends.length;
 });
 
-UserSchema.virtual('number_of_posts').get(function () {
-   return this.posts.length;
-});
-
 UserSchema.pre('save', async function (next) {
    if (this.isModified('password')) {
       this.passwordConfirm = undefined;
