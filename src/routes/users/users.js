@@ -8,6 +8,7 @@ const {
    HttpRemoveUser,
    HttpGetUserByID,
    HttpGetUserPosts,
+   HttpAddFriend,
 } = require('../../controllers/user/users');
 const { upLoad } = require('../../file_uploads/AWS/imageFile');
 const {
@@ -37,7 +38,7 @@ router.delete(
 
 // routes for friends
 
-router.post('/users/add-friends');
+router.post('/users/add-friends/:userId', HttpCheckLoggedIn, HttpAddFriend);
 
 router.get('/my-friends');
 

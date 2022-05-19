@@ -1,6 +1,7 @@
 const User = require('../../database/models/userModel');
 const AsyncError = require('../../controllers/err/Async Error/asyncError');
 const response = require('../../../utils/response');
+const Post = require('../../database/models/postModel');
 const AppError = require('../../controllers/err/Operational Error/Operational_Error');
 
 const selectOptions = {
@@ -11,6 +12,8 @@ const selectOptions = {
    password: 0,
    notifications: 0,
    comments: 0,
+   posts: 0,
+   likes: 0,
 };
 
 exports.HttpUpdateUserCredentials = AsyncError(async (req, res, next) => {
@@ -22,7 +25,7 @@ exports.HttpUpdateUserCredentials = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpGetUser = AsyncError(async (req, res, next) => {
-   const loggedInUser = await User.findById(req.user._id);
+   const loggedInUser = await User.findById(req.user._id, selectOptions);
    response(res, 200, loggedInUser);
 });
 
@@ -39,13 +42,6 @@ exports.HttpGetAllUsers = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpRemoveUser = AsyncError(async (req, res, next) => {
-   if (req.user._id == req.params.id)
-      return next(
-         new AppError(
-            `you can't remove your own account, kindly contact support`,
-            400
-         )
-      );
    const user = await User.findByIdAndDelete(req.params.id);
    if (!user)
       return next(new AppError('cannot find any user with the id', 404));
@@ -62,16 +58,18 @@ exports.HttpGetUserByID = AsyncError(async (req, res, next) => {
 // get personal information
 
 exports.HttpGetUserPosts = AsyncError(async (req, res, next) => {
-   const userPosts = await User.find(
-      { _id: req.user.id },
-      { posts: true }
-   ).populate({ path: 'posts', select: '-__v' });
-   if (!userPosts.length) return next(new AppError('user posts empty', 400));
-   response(res, 200, userPosts[0].posts);
+   const userPosts = await Post.find({ creator: req.user.id }).sort('-date');
+   response(res, 200, userPosts);
 });
 
-exports.HttpAddFriend = AsyncError(async (req, res, next) => {});
+exports.HttpAddFriend = AsyncError(async (req, res, next) => {
+   req.user.friends.push(req.params.userId);
+   await req.user.save();
+   response(res, 200, 'friend request sent');
+});
 
-exports.HttpUnfriendUser = AsyncError(async (req, res, next) => {});
+exports.HttpUnfriendUser = AsyncError(async (req, res, next) => {
+   req.user.friends.
+});
 
 exports.HttpMyFriends = AsyncError(async (req, res, next) => {});

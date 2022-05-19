@@ -124,10 +124,25 @@ const UserSchema = Mongoose.Schema(
       },
    },
 
-   { timestamps: true }
+   {
+      timestamps: true,
+
+      toObject: {
+         virtuals: true,
+      },
+      toJSON: {
+         virtuals: true,
+      },
+   }
 );
 
-// UserSchema.index({ name: 1, chats: 1, comments: 1 });
+UserSchema.virtual('number_of_friends').get(function () {
+   return this.friends.length;
+});
+
+UserSchema.virtual('number_of_posts').get(function () {
+   return this.posts.length;
+});
 
 UserSchema.pre('save', async function (next) {
    if (this.isModified('password')) {

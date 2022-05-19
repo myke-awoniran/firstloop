@@ -4,6 +4,7 @@ const AsyncError = require('../err/Async Error/asyncError');
 // const AppError = require('../err/Operational Error/Operational_Error');
 // const Comment = require('../../database/models/commentModel');
 const Comment = require('../../database/models/commentModel');
+const AppError = require('../err/Operational Error/Operational_Error');
 
 function Options(req) {
    return {
@@ -22,6 +23,7 @@ exports.HttpCreateNewPost = AsyncError(async (req, res, next) => {
 
 exports.HttpGetPost = AsyncError(async (req, res, next) => {
    const post = await Post.findById(req.params.postId);
+   if (!post) return next(new AppError('no post found with that id', 200));
    response(res, 200, post);
 });
 
@@ -59,7 +61,7 @@ exports.HttpUnlikePost = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpSharePost = AsyncError(async (req, res, next) => {
-   const user = req.user.posts.push(req.params.postId);
+   req.user.posts.push(req.params.postId);
    await req.user.save();
    response(res, 200, 'shared');
 });

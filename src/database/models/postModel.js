@@ -47,7 +47,7 @@ const postSchema = Mongoose.Schema(
       },
    }
 );
-// console.log(Mongoose);
+
 postSchema.virtual('number_of_likes').get(function () {
    return this.likeBy.length;
 });

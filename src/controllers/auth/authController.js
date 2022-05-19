@@ -70,6 +70,7 @@ exports.HttpCheckLoggedIn = AsyncError(async (req, res, next) => {
          names: true,
          chats: true,
          about: true,
+         friends: true,
       }
    );
    if (!currentUser)
