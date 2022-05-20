@@ -42,9 +42,7 @@ router.delete(
 // routes for friends
 
 router.post('/users/add-friends/:userId', HttpCheckLoggedIn, HttpAddFriend);
-
 router.get('/my-friends', HttpCheckLoggedIn, HttpMyFriends);
-
 router.patch('/unfriend/:userId', HttpCheckLoggedIn);
 
 module.exports = router;

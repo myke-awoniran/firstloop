@@ -1,16 +1,14 @@
 const Socket = require('socket.io');
-// class Socket {
-//    constructor(socketio, expressApp) {
-//       this.socketio = socketio;
-//       this.expressApp = expressApp;
-//    }
 
-//    setup() {
-//       return this.socketio(this.expressApp);
-//    }
-//    connection() {}
-//    sendMessage() {}
-//    reconnect() {}
-// }
+async function SocketServer(server) {
+   const io = Socket(server);
+   io.on('connection', (socket) => {
+      // console.log(' I am connected');
+      socket.emit('messageFrom', { data: 'this is my server message ' });
+      socket.on('messageFromClient', (data) => {
+         console.log(data);
+      });
+   });
+}
 
-module.exports = Socket;
+module.exports = SocketServer;

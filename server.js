@@ -1,9 +1,12 @@
-dotenv = require('dotenv').config();
-const Socket = require('socket.io');
+require('dotenv').config();
+const http = require('http');
+// const Socket = require('socket.io');
 const app = require('./App');
+
+const HttpServer = http.createServer(app);
 const config = require('./config/secret');
 const connectDB = require('./src/database/connections/connections');
-// const Socket = require('./src/sockets/sockets');
+const SocketServer = require('./src/sockets/sockets');
 
 const DB = config.database_connection_string.replace(
    '<PASSWORD>',
@@ -15,9 +18,7 @@ async function Server(server) {
    const expressServer = server.listen(config.port, () => {
       console.log(`first loop listening on port ${config.port}`);
    });
-   // const io = new Socket(Socket, expressServer).socket();
+   SocketServer(expressServer);
 }
 
-Server(app);
-
-// console.log(port)
+Server(HttpServer);
