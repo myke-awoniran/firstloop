@@ -1,9 +1,9 @@
 const User = require('../../database/models/userModel');
-const AsyncError = require('../../controllers/err/Async Error/asyncError');
+const AsyncError = require('../err/Async Error/asyncError');
 const response = require('../../../utils/response');
 const Post = require('../../database/models/postModel');
 
-const AppError = require('../../controllers/err/Operational Error/Operational_Error');
+const AppError = require('../err/Operational Error/Operational_Error');
 
 const selectOptions = {
    chats: 0,
