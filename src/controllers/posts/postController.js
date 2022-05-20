@@ -1,7 +1,6 @@
 const response = require('../../../utils/response');
 const Post = require('../../database/models/postModel');
 const AsyncError = require('../err/Async Error/asyncError');
-// const AppError = require('../err/Operational Error/Operational_Error');
 // const Comment = require('../../database/models/commentModel');
 const Comment = require('../../database/models/commentModel');
 const AppError = require('../err/Operational Error/Operational_Error');
@@ -43,7 +42,7 @@ exports.HttpEditPost = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpLikePost = AsyncError(async (req, res, next) => {
-   const { likeBy } = await Post.findByIdAndUpdate(
+   await Post.findByIdAndUpdate(
       req.params.postId,
       {
          $push: { likeBy: req.user._id },
@@ -54,7 +53,7 @@ exports.HttpLikePost = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpUnlikePost = AsyncError(async (req, res, next) => {
-   const { likeBy } = await Post.findByIdAndUpdate(req.params.postId, {
+   await Post.findByIdAndUpdate(req.params.postId, {
       $pull: { likeBy: req.user._id },
    });
    response(res, 200, 'unliked');
@@ -75,7 +74,7 @@ exports.HttpCommentPost = AsyncError(async (req, res, next) => {
    // post.comments.push(newComment._id);
    // await post.save();
    // response(res, 200, post.comments);
-   console.log('I am working now');
+   // console.log('I am working now');
    // grab the postId
    // add the comment Id to the comment of the post
    // populate and send the comment out instantly
