@@ -1,56 +1,24 @@
-const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const app = require('express')();
 const bodyParser = require('body-parser');
-const config = require('./config/secret');
-const AppError = require('./src/controllers/err/Operational Error/Operational_Error');
 const version1 = require('./src/versions/version1');
+const App = require('./src/controllers/App/appController');
 const errHandler = require('./src/controllers/err/Global Error/Global_error_handler');
 
-const app = express();
-
 app.use(cors());
-
-// app.use(passport.initialize());
-
-// passport.serializeUser((user, done) => {
-//    done(null, user.id);
-// });
-
-// passport.deserializeUser((id, done) => {
-//    User.findById(id);
-// });
-
 app.use(helmet());
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 
-// app.use(
-//    session({
-//       secret: config.session,
-//       resave: true,
-//       saveUninitialized: true,
-//    })
-// );
-
-app.get('/', (req, res, next) => {
-   res.status(200).json({
-      status: 200,
-      message: 'welcome to first-loop chat-app',
-      description: `Discuss any topic, dive into people's interests, hobbies, passions and more ...`,
-   });
-});
+app.get('/', App.HttpHomeController);
 
 //HANDLING VERSIONS
 app.use(version1);
 
 //unhandled routes
-app.use('*', (req, res, next) => {
-   return next(
-      new AppError(`can't find this ${req.originalUrl} on this server`, 404)
-   );
-});
+app.use('*', App.HttpHandleUndefinedRoutes);
 
 //global express error handler
 app.use(errHandler);

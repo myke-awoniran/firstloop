@@ -1,10 +1,10 @@
 require('dotenv').config();
 const http = require('http');
-// const Socket = require('socket.io');
 const app = require('./App');
 
-const HttpServer = http.createServer(app);
 const config = require('./config/secret');
+
+const HttpServer = http.createServer(app);
 const connectDB = require('./src/database/connections/connections');
 const SocketServer = require('./src/sockets/sockets');
 

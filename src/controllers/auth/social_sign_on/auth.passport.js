@@ -55,18 +55,18 @@ async function getTokens(credentialOject) {
       redirect_uri: credentialOject.redirectUri,
       grant_type: 'authorization_code',
    };
-   const response = await axios.post(url, querystring.stringify(values), {
+   const googleResponse = await axios.post(url, querystring.stringify(values), {
       headers: {
          'Content-Type': 'application/x-www-form-urlencoded',
       },
    });
-   if (!response) return next(new AppError('failed to fetch tokens', 400));
-   return response.data;
+   if (!googleResponse) return;
+   return googleResponse.data;
 }
 
 async function HttpGetUserCredential(req, res, next) {
    try {
-      const code = req.query.code;
+      const { code } = req.query;
       const { id_token, access_token } = await getTokens({
          code,
          clientId: config.CLIENT_ID,
