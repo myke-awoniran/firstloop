@@ -5,6 +5,7 @@ const chatSchema = Mongoose.Schema({
       type: String,
       trim: true,
    },
+
    isGroupChat: {
       type: Boolean,
       default: false,
@@ -15,6 +16,7 @@ const chatSchema = Mongoose.Schema({
          ref: 'Users',
       },
    ],
+
    latestMessage: {
       type: Mongoose.ObjectId.Schema,
       ref: 'Message',
