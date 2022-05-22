@@ -7,19 +7,26 @@ const UserSchema = Mongoose.Schema(
          first_name: {
             type: String,
             trim: true,
+            required: [true, ' your first name'],
          },
+
          middle_name: {
             type: String,
+            required: [true, ' your middle name'],
             trim: true,
          },
+
          last_name: {
             type: String,
             trim: true,
+            required: [true, ' your last name'],
          },
+
          user_name: {
             type: String,
             trim: true,
-            unique: [true, 'username already exist'],
+            required: [true, ' your username'],
+            unique: true,
          },
       },
 
@@ -46,8 +53,10 @@ const UserSchema = Mongoose.Schema(
       email: {
          type: String,
          trim: true,
+         required: [true, 'your email address'],
          unique: true,
       },
+
       password: {
          type: String,
          select: false,
@@ -57,6 +66,7 @@ const UserSchema = Mongoose.Schema(
          type: String,
          default: 'avatar.jpg',
       },
+
       coverPhoto: {
          type: String,
       },

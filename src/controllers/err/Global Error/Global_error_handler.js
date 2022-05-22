@@ -1,25 +1,34 @@
-const AppError = require('../Operational Error/Operational_Error');
+const {
+   mongooseCastError,
+   mongooseDuplicateError,
+   mongooseValidationError,
+} = require('../Mongoose Error/mongooseError');
+const { JwtError } = require('../connections Errors/connectionError');
 
 function errHandler(err, req, res, next) {
    if (process.env.NODE_ENV === 'production') {
+      const error = { ...err };
+      if (error.code === 11000) return mongooseDuplicateError(error, res);
+      if (err.name === 'CastError') return mongooseCastError(error, res);
+      if (err.name === 'ValidationError')
+         return mongooseValidationError(error, res);
+      if (err.name === 'JsonWebTokenError') JwtError(error, res);
       return handleProdErr(err, res);
    }
    handleDevErr(err, res);
 }
 
 function handleProdErr(err, res) {
-   let error = { ...err };
-   if (error.name === 'CastError')
-      return res.status(err.statusCode || 400).json({
-         status: 'error',
-         message: `Invalid ${err.path} : ${err.value}`,
+   if (err.isOperational)
+      return res.status(err.statusCode || 500).json({
+         status: err.status,
+         isOperational: err.isOperational,
+         message: err.message,
       });
-
-   if (error.name === 'ValidationError')
-      return res.status(400).json({
-         status: 'error',
-         message: `error validation ${2 + 3}`,
-      });
+   return res.status(500).json({
+      status: 'error',
+      message: 'something went very wrong !!!',
+   });
 }
 
 function handleDevErr(err, res) {
@@ -27,7 +36,7 @@ function handleDevErr(err, res) {
       status: 'error',
       err,
       message: err.message,
-      stack: err.stack,
+      name: err.name,
    });
 }
 

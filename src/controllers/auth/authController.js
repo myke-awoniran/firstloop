@@ -10,8 +10,6 @@ const AppError = require('../err/Operational Error/Operational_Error');
 const { signToken, existingModel } = require('../../../utils/helperFunctions');
 
 exports.HttpRegister = AsyncError(async (req, res, next) => {
-   if (await existingModel(req.body.email, User))
-      return next(new AppError('Account already exist', 400));
    const user = await User.create(req.body);
    await new Email(user, undefined).sendWelcome();
    response(res, 201, 'Account created successfully');
@@ -34,6 +32,7 @@ exports.HttpLogin = AsyncError(async (req, res, next) => {
       : (existingUser = await User.findOne(
            {
               'names.user_name': `${req.body.query}`,
+              active: true,
            },
            { password: 1 }
         ));
@@ -44,7 +43,7 @@ exports.HttpLogin = AsyncError(async (req, res, next) => {
          existingUser.password
       ))
    )
-      return next(new AppError(`opps, invalid username or password`, 401));
+      return next(new AppError(`opps!!!, invalid username or password`, 401));
    response(res, 200, 'login successful!', await signToken(existingUser._id));
 });
 
@@ -81,15 +80,15 @@ exports.HttpCheckLoggedIn = AsyncError(async (req, res, next) => {
    next();
 });
 
-exports.HttpRestrictedTo = (...roles) => {
-   return (req, res, next) => {
+exports.HttpRestrictedTo =
+   (...roles) =>
+   (req, res, next) => {
       if (!roles.includes(req.user.role))
          return next(
             new AppError('you are not allowed to perform this operation', 403)
          );
       next();
    };
-};
 
 exports.HttpForgotPassword = async (req, res, next) => {
    const user = await existingModel(req.body.email, User);

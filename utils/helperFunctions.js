@@ -5,15 +5,23 @@ async function signToken(id) {
    });
 }
 async function verifyToken(id, userToken) {
-   return await jwt.verify(id, token);
+   return await jwt.verify(id, userToken);
 }
 
 async function existingModel(email, Model) {
    return await Model.findOne({ email });
 }
 
+function productionErrorResponse(err, res, statusCode, message) {
+   return res.status(statusCode).json({
+      status: 'fail',
+      message,
+   });
+}
+
 module.exports = {
    signToken,
    verifyToken,
    existingModel,
+   productionErrorResponse,
 };
