@@ -6,20 +6,6 @@ const {
 
 const { JwtError } = require('../connections Errors/connectionError');
 
-function errHandler(err, req, res, next) {
-   if (process.env.NODE_ENV === 'production') {
-      const error = { ...err };
-
-      if (error.code === 11000) return mongooseDuplicateError(error, res);
-      if (err.name === 'CastError') return mongooseCastError(error, res);
-      if (err.name === 'ValidationError')
-         return mongooseValidationError(error, res);
-      if (err.name === 'JsonWebTokenError') JwtError(error, res);
-      return handleProdErr(err, res);
-   }
-   handleDevErr(err, res);
-}
-
 function handleProdErr(err, res) {
    if (err.isOperational)
       return res.status(err.statusCode || 500).json({
@@ -40,6 +26,20 @@ function handleDevErr(err, res) {
       message: err.message,
       name: err.name,
    });
+}
+
+function errHandler(err, req, res, next) {
+   if (process.env.NODE_ENV === 'production') {
+      const error = { ...err };
+
+      if (error.code === 11000) return mongooseDuplicateError(error, res);
+      if (err.name === 'CastError') return mongooseCastError(error, res);
+      if (err.name === 'ValidationError')
+         return mongooseValidationError(error, res);
+      if (err.name === 'JsonWebTokenError') JwtError(error, res);
+      return handleProdErr(err, res);
+   }
+   handleDevErr(err, res);
 }
 
 module.exports = errHandler;
