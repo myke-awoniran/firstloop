@@ -1,6 +1,5 @@
-const AppError = require('../err/Operational Error/Operational_Error');
-
 const response = require('../../../utils/response');
+const AppError = require('../err/Operational Error/Operational_Error');
 
 exports.HttpHomeController = (req, res, next) => {
    response(

@@ -1,10 +1,10 @@
 const axios = require('axios');
 const querystring = require('query-string');
+const Email = require('../../../email/email');
 const response = require('../../../../utils/response');
 const User = require('../../../database/models/userModel');
 const { signToken } = require('../../../../utils/helperFunctions');
 const AppError = require('../../err/Operational Error/Operational_Error');
-const Email = require('../../../email/email');
 
 const config = {
    CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
@@ -60,7 +60,8 @@ async function getTokens(credentialOject) {
          'Content-Type': 'application/x-www-form-urlencoded',
       },
    });
-   if (!googleResponse) return;
+
+   if (!googleResponse) return new AppError('failed to fetch token', 404);
    return googleResponse.data;
 }
 
