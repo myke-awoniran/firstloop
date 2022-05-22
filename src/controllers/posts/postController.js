@@ -66,13 +66,13 @@ exports.HttpSharePost = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpCommentPost = AsyncError(async (req, res, next) => {
-   // const newComment = await Comment.create({
-   //    comment: req.body.comment,
-   //    commentBy: req.user._id,
-   // });
-   // const post = await Post.findById(req.params.postId);
-   // post.comments.push(newComment._id);
-   // await post.save();
+   const newComment = await Comment.create({
+      comment: req.body.comment,
+      commentBy: req.user._id,
+   });
+   const post = await Post.findById(req.params.postId);
+   post.comments.push(newComment._id);
+   await post.save();
    // response(res, 200, post.comments);
    // console.log('I am working now');
    // grab the postId

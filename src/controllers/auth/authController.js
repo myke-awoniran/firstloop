@@ -109,7 +109,6 @@ exports.HttpForgotPassword = async (req, res, next) => {
       user.passwordResetToken = undefined;
       user.passwordResetTokenExpires = undefined;
       user.save();
-      console.log(err);
       return next(
          new AppError(
             'An error occurred while sending the email my boss, kindly consider trying again !! '

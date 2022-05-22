@@ -29,7 +29,6 @@ function handleDevErr(err, res) {
 // global error handling middleware
 function errHandler(err, req, res, next) {
    if (process.env.NODE_ENV === 'production') {
-      console.log(err);
       const error = { ...err };
       if (error.code === 11000) return mongoose.DuplicateError(error, res);
       if (err.name === 'CastError') return mongoose.CastError(error, res);

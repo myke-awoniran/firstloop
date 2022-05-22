@@ -68,7 +68,7 @@ async function getTokens(credentialOject) {
 async function HttpGetUserCredential(req, res, next) {
    try {
       const { code } = req.query;
-      const { id_token, access_token } = await getTokens({
+      const { id_token: idToken, access_token: accessToken } = await getTokens({
          code,
          clientId: config.CLIENT_ID,
          clientSecret: config.CLIENT_SECRET,
@@ -76,10 +76,10 @@ async function HttpGetUserCredential(req, res, next) {
       });
       //fetching the user from the access token
       const googleUser = await axios.get(
-         `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`,
+         `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${accessToken}`,
          {
             headers: {
-               Authorization: `Bearer ${id_token}`,
+               Authorization: `Bearer ${idToken}`,
             },
          }
       );
