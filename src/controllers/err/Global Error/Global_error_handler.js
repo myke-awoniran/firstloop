@@ -3,11 +3,13 @@ const {
    mongooseDuplicateError,
    mongooseValidationError,
 } = require('../Mongoose Error/mongooseError');
+
 const { JwtError } = require('../connections Errors/connectionError');
 
 function errHandler(err, req, res, next) {
    if (process.env.NODE_ENV === 'production') {
       const error = { ...err };
+
       if (error.code === 11000) return mongooseDuplicateError(error, res);
       if (err.name === 'CastError') return mongooseCastError(error, res);
       if (err.name === 'ValidationError')

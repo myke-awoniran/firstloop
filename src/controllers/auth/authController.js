@@ -21,7 +21,7 @@ exports.HttpLogin = AsyncError(async (req, res, next) => {
       return next(
          new AppError('kindly provide email/username and password', 400)
       );
-   req.body.query.includes('@')
+   existingUser = req.body.query.includes('@')
       ? (existingUser = await User.findOne(
            {
               email: req.body.query,
