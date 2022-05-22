@@ -1,11 +1,8 @@
-const {
-   mongooseCastError,
-   mongooseDuplicateError,
-   mongooseValidationError,
-} = require('../Mongoose Error/mongooseError');
+const mongoose = require('../Mongoose Error/mongooseError');
 
-const { JwtError } = require('../connections Errors/connectionError');
+const JWT = require('../connections Errors/connectionError');
 
+//handles errors in production
 function handleProdErr(err, res) {
    if (err.isOperational)
       return res.status(err.statusCode || 500).json({
@@ -19,6 +16,7 @@ function handleProdErr(err, res) {
    });
 }
 
+//handles error in development
 function handleDevErr(err, res) {
    return res.status(err.statusCode || 500).json({
       status: 'error',
@@ -28,15 +26,16 @@ function handleDevErr(err, res) {
    });
 }
 
+// global error handling middleware
 function errHandler(err, req, res, next) {
    if (process.env.NODE_ENV === 'production') {
+      console.log(err);
       const error = { ...err };
-
-      if (error.code === 11000) return mongooseDuplicateError(error, res);
-      if (err.name === 'CastError') return mongooseCastError(error, res);
+      if (error.code === 11000) return mongoose.DuplicateError(error, res);
+      if (err.name === 'CastError') return mongoose.CastError(error, res);
       if (err.name === 'ValidationError')
-         return mongooseValidationError(error, res);
-      if (err.name === 'JsonWebTokenError') JwtError(error, res);
+         return mongoose.ValidationError(error, res);
+      if (err.name === 'JsonWebTokenError') JWT.JwtError(error, res);
       return handleProdErr(err, res);
    }
    handleDevErr(err, res);
