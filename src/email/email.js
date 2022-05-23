@@ -8,6 +8,7 @@ class Email {
       this.url = url;
       this.from = process.env.EMAIL_FROM;
    }
+
    newTransport() {
       return nodemailer.createTransport({
          service: 'gmail',
@@ -17,6 +18,7 @@ class Email {
          },
       });
    }
+
    async send(template, subject) {
       const html = pug.renderFile(
          `${__dirname}/templates/emails/${template}.pug`,
@@ -34,9 +36,11 @@ class Email {
       };
       await this.newTransport().sendMail(mailOptions);
    }
+
    async sendWelcome() {
       await this.send('welcome', 'welcome to First-Loop');
    }
+
    async sendPasswordReset() {
       await this.send(
          'passwordReset',
