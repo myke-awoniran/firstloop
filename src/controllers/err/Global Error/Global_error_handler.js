@@ -12,7 +12,8 @@ function handleProdErr(err, res) {
       });
    return res.status(500).json({
       status: 'error',
-      message: 'something went very wrong !!!',
+      message:
+         'something went very wrong, check you internet connection and try again!!!',
    });
 }
 

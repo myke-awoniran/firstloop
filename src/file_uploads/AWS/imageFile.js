@@ -1,16 +1,17 @@
 const Aws = require('aws-sdk');
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuid } = require('uuid');
 const response = require('../../../utils/response');
-const aws_key_id = process.env.ACCESS_KEY_ID;
-const aws_secret_key = process.env.SECRET_ACCESS_KEY;
+
+const awsKeyId = process.env.ACCESS_KEY_ID;
+const awsSecretKey = process.env.SECRET_ACCESS_KEY;
 
 const s3 = new Aws.S3({
-   accessKeyId: aws_key_id,
-   secretAccessKey: aws_secret_key,
+   accessKeyId: awsKeyId,
+   secretAccessKey: awsSecretKey,
 });
 
 function upLoad(req, res, next) {
-   const Key = `user-${req.user.id}/${uuidv4()}/${Date.now()}.jpeg`;
+   const Key = `user-${req.user.id}/${uuid()}/${Date.now()}.jpeg`;
    s3.getSignedUrl(
       'putObject',
       {

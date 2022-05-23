@@ -9,13 +9,13 @@ function CastError(err, res) {
 
 function DuplicateError(err, res) {
    const value = Object.entries(err.keyValue);
-   const message = `Duplicate field value : ${value}. Please use another value`;
+   const message = `Duplicate ${value}. Please use another value`;
    productionErrorResponse(err, res, 400, message);
 }
 
 function ValidationError(err, res) {
    const errors = Object.values(err.errors).map((el) => el.message);
-   const message = `invalid input data kindly provide ${errors}`;
+   const message = `invalid input data kindly provide ${errors.join(',')}`;
    productionErrorResponse(err, res, 400, message);
 }
 
