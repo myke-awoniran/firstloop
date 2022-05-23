@@ -10,6 +10,7 @@ const version1 = require('./src/versions/version1');
 const App = require('./src/controllers/App/appController');
 const errHandler = require('./src/controllers/err/Global Error/Global_error_handler');
 
+// SECURITY MIDDLEWARE
 app.use(cors());
 app.use(helmet());
 app.use(mongoSanitize());
@@ -18,15 +19,16 @@ app.use(morgan('combined'));
 app.use(bodyParser.json({ limit: '10kb' }));
 app.use(hpp());
 
+//HANDLING HOME ROUTE
 app.get('/', App.HttpHomeController);
 
 //HANDLING VERSIONS
 app.use(version1);
 
-//unhandled routes
+// UNHANDLED ROUTES
 app.use('*', App.HttpHandleUndefinedRoutes);
 
-//global express error handler
+//GLOBAL ERROR HANDLER
 app.use(errHandler);
 
 module.exports = app;

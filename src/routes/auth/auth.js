@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const User = require('../../database/models/userModel');
 
 const {
    HttpGetUserCredential,
