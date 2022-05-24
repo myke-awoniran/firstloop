@@ -10,7 +10,7 @@ function CastError(err, res) {
 function DuplicateError(err, res) {
    const value = Object.entries(err.keyValue);
    const message = `Duplicate ${value}. Please use another value`;
-   productionErrorResponse(err, res, 400, message);
+   productionErrorResponse(err, res, 409, message);
 }
 
 function ValidationError(err, res) {
