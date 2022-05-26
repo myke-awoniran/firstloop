@@ -2,7 +2,6 @@ require('dotenv').config();
 const http = require('http');
 const Mongoose = require('mongoose');
 const Exception = require('./src/controllers/err/Rejection&Exceptions/unhandledRejection');
-
 Exception.unCaughtException();
 const app = require('./App');
 

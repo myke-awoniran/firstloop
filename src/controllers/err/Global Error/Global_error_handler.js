@@ -35,7 +35,7 @@ function errHandler(err, req, res, next) {
       if (err.name === 'CastError') return mongoose.CastError(error, res);
       if (err.name === 'ValidationError')
          return mongoose.ValidationError(error, res);
-      if (err.name === 'JsonWebTokenError') JWT.JwtError(error, res);
+      if (err.name === 'JsonWebTokenError') return JWT.JwtError(error, res);
       return handleProdErr(err, res);
    }
    handleDevErr(err, res);

@@ -12,7 +12,9 @@ async function SocketServer(server) {
          console.log(data);
       });
    });
-   // io.on('disconnect');
+   io.on('disconnect', (socket) => {
+      console.log('user just disconnected');
+   });
 }
 
 module.exports = SocketServer;
