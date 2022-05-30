@@ -6,3 +6,4 @@ GET to /api/v1/users/ksksks @ 1653938738161 respond with 200
 GET to /api/v1/users/ksksks @ 1653938755459 respond with 200
 POST to /api/v1/register @ 1653948695340 respond with 200
 POST to /api/v1/register @ 1653948706925 respond with 200
+POST to /api/v1/register @ 1653950183104 respond with 200
