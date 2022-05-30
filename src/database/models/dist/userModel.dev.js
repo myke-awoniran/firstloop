@@ -28,36 +28,38 @@ var UserSchema = Mongoose.Schema({
       unique: true
     }
   },
+  googleId: {
+    type: String,
+    select: false
+  },
   // profile document
-  profile: {
-    phone: {
-      type: String
-    },
-    about: {
-      type: String
-    },
-    joinedAt: {
-      type: Date,
-      "default": Date.now()
-    },
-    email: {
-      type: String,
-      trim: true,
-      required: [true, 'your email address'],
-      unique: true
-    },
-    verified: {
-      type: Boolean,
-      "default": false,
-      select: false
-    },
-    profilePic: {
-      type: String,
-      "default": 'avatar.jpg'
-    },
-    coverPhoto: {
-      type: String
-    }
+  phone: {
+    type: String
+  },
+  about: {
+    type: String
+  },
+  joinedAt: {
+    type: Date,
+    "default": Date.now()
+  },
+  email: {
+    type: String,
+    trim: true,
+    required: [true, 'your email address'],
+    unique: true
+  },
+  verified: {
+    type: Boolean,
+    "default": false,
+    select: false
+  },
+  profilePic: {
+    type: String,
+    "default": 'avatar.jpg'
+  },
+  coverPhoto: {
+    type: String
   },
   password: {
     type: String,
