@@ -15,8 +15,7 @@ exports.sendMessage = AsyncError(async (req, res, next) => {
 
 exports.getMessages = AsyncError(async (req, res, next) => {
    const message = await Message.find(req.params.id, req.body);
-   if (!message)
-      return next(new AppError('message to update does not exist', 200));
+   if (!message) return next(new AppError('no message found', 200));
    response(res, 200, message);
 });
 
