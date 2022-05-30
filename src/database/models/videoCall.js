@@ -20,6 +20,7 @@ const VideoSchema = Mongoose.Schema(
       caller: {
          type: Mongoose.Schema.ObjectId,
          ref: 'USer',
+         admin: true,
       },
    },
    {

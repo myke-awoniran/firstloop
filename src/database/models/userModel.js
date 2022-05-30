@@ -29,46 +29,45 @@ const UserSchema = Mongoose.Schema(
             unique: true,
          },
       },
+      // profile document
+      profile: {
+         phone: {
+            type: String,
+         },
 
-      googleId: {
-         type: String,
-         select: false,
+         about: {
+            type: String,
+         },
+
+         joinedAt: {
+            type: Date,
+            default: Date.now(),
+         },
+
+         email: {
+            type: String,
+            trim: true,
+            required: [true, 'your email address'],
+            unique: true,
+         },
+         verified: {
+            type: Boolean,
+            default: false,
+            select: false,
+         },
+
+         profilePic: {
+            type: String,
+            default: 'avatar.jpg',
+         },
+
+         coverPhoto: {
+            type: String,
+         },
       },
-
-      // private document
-
-      phone: {
-         type: String,
-      },
-
-      about: {
-         type: String,
-      },
-
-      joinedAt: {
-         type: Date,
-         default: Date.now(),
-      },
-
-      email: {
-         type: String,
-         trim: true,
-         required: [true, 'your email address'],
-         unique: true,
-      },
-
       password: {
          type: String,
          select: false,
-      },
-
-      profilePic: {
-         type: String,
-         default: 'avatar.jpg',
-      },
-
-      coverPhoto: {
-         type: String,
       },
 
       passwordResetToken: {
@@ -86,17 +85,12 @@ const UserSchema = Mongoose.Schema(
          type: Boolean,
          default: true,
       },
+
       role: {
          type: String,
          enum: ['user', 'admin'],
          select: false,
          default: 'user',
-      },
-
-      verified: {
-         type: Boolean,
-         default: false,
-         select: false,
       },
 
       friends: [

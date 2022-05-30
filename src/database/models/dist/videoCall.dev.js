@@ -17,7 +17,8 @@ var VideoSchema = Mongoose.Schema({
   }],
   caller: {
     type: Mongoose.Schema.ObjectId,
-    ref: 'USer'
+    ref: 'USer',
+    admin: true
   }
 }, {
   timestamps: true
