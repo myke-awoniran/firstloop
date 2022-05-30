@@ -1,9 +1,12 @@
 const Mongoose = require('mongoose');
 
 const NotificationSchema = Mongoose.Schema({
-   notification: String,
+   notification: {
+      type: String,
+      enum: ['Video', 'Audio', 'Like', 'Posts', 'Comment'],
+   },
    Date: Date.now,
-   owner: {
+   user: {
       type: Mongoose.Schema.ObjectId,
       ref: 'User',
    },

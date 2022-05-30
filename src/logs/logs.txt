@@ -1,4 +1,8 @@
 
-PUT to /api/v1/users/ksksks @ 1653931847184
-PUT to /api/v1/users/ksksks @ function now() { [native code] }
-PUT to /api/v1/users/ksksks @ 1653931906092
+PUT to /api/v1/users/ksksks @ 1653936715120 respond with 200
+PUT to /api/v1/users/ksksks @ 1653938682687 respond with 200
+GET to /api/v1/users/ksksks @ 1653938718523 respond with 200
+GET to /api/v1/users/ksksks @ 1653938738161 respond with 200
+GET to /api/v1/users/ksksks @ 1653938755459 respond with 200
+POST to /api/v1/register @ 1653948695340 respond with 200
+POST to /api/v1/register @ 1653948706925 respond with 200

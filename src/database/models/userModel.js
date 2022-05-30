@@ -129,6 +129,22 @@ const UserSchema = Mongoose.Schema(
          enum: ['male', 'female'],
       },
 
+      videoCalls: [
+         {
+            type: Mongoose.Schema.ObjectId,
+            select: false,
+            ref: 'Video',
+         },
+      ],
+
+      voiceCalls: [
+         {
+            type: Mongoose.Schema.ObjectId,
+            select: false,
+            ref: 'Audio',
+         },
+      ],
+
       location: {
          type: String,
       },
