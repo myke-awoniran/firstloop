@@ -15,9 +15,11 @@ app.use(cors());
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(xss());
-app.use(morgan('combined'));
+app.use(morgan('dev'));
 app.use(bodyParser.json({ limit: '10kb' }));
 app.use(hpp());
+
+app.use(App.Logger);
 
 //HANDLING HOME ROUTE
 app.get('/', App.HttpHomeController);

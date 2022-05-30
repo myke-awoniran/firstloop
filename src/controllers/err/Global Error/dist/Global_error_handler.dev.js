@@ -14,7 +14,6 @@ var JWT = require('../connections Errors/connectionError'); //handles errors in 
 function handleProdErr(err, res) {
   if (err.isOperational) return res.status(err.statusCode || 500).json({
     status: err.status,
-    isOperational: err.isOperational,
     message: err.message
   });
   return res.status(500).json({
