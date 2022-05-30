@@ -27,8 +27,7 @@ exports.Logger = async (req, res, next) => {
    location = existsSync(location) ? location : mkdir(location);
    await appendFile(
       join(location, 'logs.txt'),
-      `\n${req.headers['x-custom-key']}`
+      `\n${req.method} to ${req.originalUrl} @ ${Date.now()}`
    );
-
    next();
 };

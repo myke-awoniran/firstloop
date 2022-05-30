@@ -31,7 +31,7 @@ exports.Logger = function _callee(req, res, next) {
           location = join(__dirname, '../..', '/logs');
           location = existsSync(location) ? location : mkdir(location);
           _context.next = 4;
-          return regeneratorRuntime.awrap(appendFile(join(location, 'logs.txt'), "\n".concat(req.headers['x-custom-key'])));
+          return regeneratorRuntime.awrap(appendFile(join(location, 'logs.txt'), "\n".concat(req.method, " to ").concat(req.originalUrl, " @ ").concat(Date.now())));
 
         case 4:
           next();
