@@ -56,10 +56,10 @@ const UserSchema = Mongoose.Schema(
          required: [true, 'your email address'],
          unique: true,
       },
+
       verified: {
          type: Boolean,
          default: false,
-         select: false,
       },
 
       profilePic: {
@@ -68,6 +68,10 @@ const UserSchema = Mongoose.Schema(
       },
 
       coverPhoto: {
+         type: String,
+      },
+
+      location: {
          type: String,
       },
 
@@ -103,6 +107,10 @@ const UserSchema = Mongoose.Schema(
          {
             type: Mongoose.Schema.ObjectId,
             ref: 'users',
+            is_a_Friend: {
+               type: Boolean,
+               default: true,
+            },
          },
       ],
 
@@ -112,18 +120,21 @@ const UserSchema = Mongoose.Schema(
             ref: 'notifications',
          },
       ],
+
       calls: [
          {
             type: Mongoose.Schema.ObjectId,
             ref: 'calls',
          },
       ],
+
       posts: [
          {
             type: Mongoose.Schema.ObjectId,
             ref: 'Post',
          },
       ],
+
       gender: {
          type: String,
          enum: ['male', 'female'],
@@ -144,10 +155,6 @@ const UserSchema = Mongoose.Schema(
             ref: 'Audio',
          },
       ],
-
-      location: {
-         type: String,
-      },
    },
 
    {
@@ -156,6 +163,7 @@ const UserSchema = Mongoose.Schema(
       toObject: {
          virtuals: true,
       },
+
       toJSON: {
          virtuals: true,
       },

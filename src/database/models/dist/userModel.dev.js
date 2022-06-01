@@ -51,14 +51,16 @@ var UserSchema = Mongoose.Schema({
   },
   verified: {
     type: Boolean,
-    "default": false,
-    select: false
+    "default": false
   },
   profilePic: {
     type: String,
     "default": 'avatar.jpg'
   },
   coverPhoto: {
+    type: String
+  },
+  location: {
     type: String
   },
   password: {
@@ -86,7 +88,11 @@ var UserSchema = Mongoose.Schema({
   },
   friends: [{
     type: Mongoose.Schema.ObjectId,
-    ref: 'users'
+    ref: 'users',
+    is_a_Friend: {
+      type: Boolean,
+      "default": true
+    }
   }],
   notifications: [{
     type: Mongoose.Schema.ObjectId,
@@ -113,10 +119,7 @@ var UserSchema = Mongoose.Schema({
     type: Mongoose.Schema.ObjectId,
     select: false,
     ref: 'Audio'
-  }],
-  location: {
-    type: String
-  }
+  }]
 }, {
   timestamps: true,
   toObject: {

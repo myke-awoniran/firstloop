@@ -73,7 +73,7 @@ exports.HttpCommentPost = AsyncError(async (req, res, next) => {
    const post = await Post.findById(req.params.postId);
    post.comments.push(newComment._id);
    await post.save();
-   // response(res, 200, post.comments);
+   response(res, 200);
    // console.log('I am working now');
    // grab the postId
    // add the comment Id to the comment of the post

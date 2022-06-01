@@ -2,7 +2,6 @@ const Mongoose = require('mongoose');
 
 const postSchema = Mongoose.Schema(
    {
-      // post schema
       post: {
          type: String,
          trim: true,
@@ -23,6 +22,7 @@ const postSchema = Mongoose.Schema(
          {
             type: Mongoose.Schema.ObjectId,
             ref: 'Comment',
+            select: false,
          },
       ],
 
@@ -49,26 +49,26 @@ const postSchema = Mongoose.Schema(
    }
 );
 
-postSchema.virtual('number_of_likes').get(function () {
-   return this.likeBy.length;
-});
+// postSchema.virtual('number_of_likes').get(function () {
+//    return this.likeBy.length;
+// });
 
-postSchema.virtual('number_of_comments').get(function () {
-   return this.comments.length;
-});
+// postSchema.virtual('number_of_comments').get(function () {
+//    return this.comments.length;
+// });
 
 postSchema.pre(/^find/, async function (next) {
    this.populate({
       path: 'likeBy',
       select: 'names',
-   })
-      .populate({
-         path: 'creator',
-         select: 'names profilePic about',
-      })
-      .populate('comments');
-
-   next();
+   }).populate({
+      path: 'creator',
+      select: 'names profilePic about',
+   });
 });
+// .populate('comments');
+
+//    next();
+// });
 
 module.exports = Mongoose.model('Post', postSchema);
