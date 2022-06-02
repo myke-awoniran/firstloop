@@ -1,5 +1,6 @@
-const Mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const Mongoose = require('mongoose');
+const atlasPlugin = require('mongoose-atlas-search');
 
 const UserSchema = Mongoose.Schema(
    {
@@ -184,5 +185,27 @@ UserSchema.methods.comparePassword = async function (
 ) {
    return await bcrypt.compare(userPassword, OriginalPassword);
 };
+const userModel = Mongoose.model('User', UserSchema);
 
-module.exports = Mongoose.model('User', UserSchema);
+// atlasPlugin.initialize({
+//    model: userModel,
+//    overwriteFind: true,
+//    searchKey: 'search',
+//    addFields: {
+//       id: '$_id',
+//       names: '$names',
+//       about: '$about',
+//    },
+//    searchFunction: (query) => {
+
+//       return {
+//          wildcard: {
+//             query: `${query}*`,
+//             path: '_id',
+//             allowAnalyzedField: true,
+//          },
+//       };
+//    },
+
+// });
+module.exports = userModel;

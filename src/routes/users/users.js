@@ -9,6 +9,7 @@ const {
    HttpGetUserPosts,
    HttpAddFriend,
    HttpMyFriends,
+   HttpSearchUser,
 } = require('../../controllers/user/users');
 
 const {
@@ -40,7 +41,7 @@ router.delete(
 );
 
 // routes for friends
-
+router.get('/search', HttpSearchUser);
 router.post('/users/add-friends/:userId', HttpCheckLoggedIn, HttpAddFriend);
 router.get('/my-friends', HttpCheckLoggedIn, HttpMyFriends);
 router.patch('/unfriend/:userId', HttpCheckLoggedIn);

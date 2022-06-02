@@ -79,3 +79,29 @@ exports.HttpMyFriends = AsyncError(async (req, res, next) => {
    });
    response(res, 200, friends);
 });
+
+exports.HttpSearchUser = AsyncError(async (req, res, next) => {
+   const users = await User.find({ search: req.query.users });
+   console.log(users);
+   // const users = await User.aggregate([
+   //    {
+   //       $search: {
+   //          text: {
+   //             query: req.query.users,
+   //             path: ['names', 'about'],
+   //          },
+   //       },
+   //    },
+   //    {
+   //       $limit: 5,
+   //    },
+   //    {
+   //       $project: {
+   //          _id: 0,
+   //          name: 1,
+   //          about: 1,
+   //       },
+   //    },
+   // ]);
+   response(res, 200, users);
+});

@@ -1,8 +1,10 @@
 "use strict";
 
+var bcrypt = require('bcrypt');
+
 var Mongoose = require('mongoose');
 
-var bcrypt = require('bcrypt');
+var atlasPlugin = require('mongoose-atlas-search');
 
 var UserSchema = Mongoose.Schema({
   names: {
@@ -176,4 +178,24 @@ UserSchema.methods.comparePassword = function _callee2(userPassword, OriginalPas
   });
 };
 
-module.exports = Mongoose.model('User', UserSchema);
+var userModel = Mongoose.model('User', UserSchema); // atlasPlugin.initialize({
+//    model: userModel,
+//    overwriteFind: true,
+//    searchKey: 'search',
+//    addFields: {
+//       id: '$_id',
+//       names: '$names',
+//       about: '$about',
+//    },
+//    searchFunction: (query) => {
+//       return {
+//          wildcard: {
+//             query: `${query}*`,
+//             path: '_id',
+//             allowAnalyzedField: true,
+//          },
+//       };
+//    },
+// });
+
+module.exports = userModel;
