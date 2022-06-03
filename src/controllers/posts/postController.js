@@ -1,7 +1,7 @@
 const response = require('../../../utils/response');
 const Post = require('../../database/models/postModel');
 const AsyncError = require('../err/Async Error/asyncError');
-// const Comment = require('../../database/models/commentModel');
+const dump = require('../../../utils/dump');
 const Comment = require('../../database/models/commentModel');
 const AppError = require('../err/Operational Error/Operational_Error');
 
@@ -73,7 +73,7 @@ exports.HttpCommentPost = AsyncError(async (req, res, next) => {
    const post = await Post.findById(req.params.postId);
    post.comments.push(newComment._id);
    await post.save();
-   response(res, 200);
+   response(res, 200, dump(newComment));
    // console.log('I am working now');
    // grab the postId
    // add the comment Id to the comment of the post

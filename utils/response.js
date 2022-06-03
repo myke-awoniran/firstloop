@@ -1,7 +1,7 @@
 function response(res, statusCode, data, token) {
    res.status(statusCode).json({
       status: 'success',
-      result: data.length,
+      // result: data.length,
       data,
       token,
    });
