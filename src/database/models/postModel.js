@@ -52,14 +52,6 @@ const postSchema = Mongoose.Schema(
    }
 );
 
-// postSchema.virtual('number_of_likes').get(function () {
-//    return this.likeBy.length;
-// });
-
-// postSchema.virtual('number_of_comments').get(function () {
-//    return this.comments.length;
-// });
-
 postSchema.pre(/^find/, async function (next) {
    this.populate({
       path: 'likeBy',
@@ -69,9 +61,5 @@ postSchema.pre(/^find/, async function (next) {
       select: 'names profilePic about',
    });
 });
-// .populate('comments');
-
-//    next();
-// });
 
 module.exports = Mongoose.model('Post', postSchema);

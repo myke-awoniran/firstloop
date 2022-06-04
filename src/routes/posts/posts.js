@@ -10,6 +10,7 @@ const {
    HttpSharePost,
    HttpCommentPost,
    HttpUnlikePost,
+   HttpGetAllCommentForPost,
 } = require('../../controllers/posts/postController');
 
 router.get('/get-all-posts', HttpGetAllPosts);
@@ -27,5 +28,9 @@ router
    .patch(HttpCheckLoggedIn, HttpUnlikePost);
 
 router.post('/posts/share/:postId', HttpCheckLoggedIn, HttpSharePost);
-router.post('/posts/comments/:postId', HttpCheckLoggedIn, HttpCommentPost);
+router
+   .route('/posts/comments/:postId')
+   .post(HttpCheckLoggedIn, HttpCommentPost)
+   .get(HttpCheckLoggedIn, HttpGetAllCommentForPost);
+
 module.exports = router;

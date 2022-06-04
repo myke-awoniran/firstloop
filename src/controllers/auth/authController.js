@@ -7,12 +7,13 @@ const response = require('../../../utils/response');
 const User = require('../../database/models/userModel');
 const AsyncError = require('../err/Async Error/asyncError');
 const AppError = require('../err/Operational Error/Operational_Error');
+const { dumbUser } = require('../../../utils/dump');
 const { signToken, existingModel } = require('../../../utils/helperFunctions');
 
 exports.HttpRegister = AsyncError(async (req, res, next) => {
    const user = await User.create(req.body);
    await new Email(user, undefined).sendWelcome();
-   response(res, 201, 'Account created successfully');
+   response(res, 201, dumbUser(user));
 });
 
 exports.HttpLogin = AsyncError(async (req, res, next) => {
@@ -70,6 +71,7 @@ exports.HttpCheckLoggedIn = AsyncError(async (req, res, next) => {
          chats: true,
          about: true,
          friends: true,
+         profilePic: true,
       }
    );
    if (!currentUser)
