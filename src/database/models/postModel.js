@@ -11,10 +11,6 @@ const postSchema = Mongoose.Schema(
          {
             type: Mongoose.Schema.ObjectId,
             ref: 'User',
-            liked: {
-               type: Boolean,
-               default: false,
-            },
          },
       ],
 

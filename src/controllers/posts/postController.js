@@ -43,17 +43,25 @@ exports.HttpEditPost = AsyncError(async (req, res, next) => {
 });
 
 exports.HttpLikePost = AsyncError(async (req, res, next) => {
-   await Post.findByIdAndUpdate(
-      req.params.postId,
-      {
-         $push: { likeBy: req.user._id },
-      },
-      { new: false, upsert: true }
-   );
+   const post = await Post.findById(req.paras.postId);
+   if (post.likeBy.includes(req.user._id)) return;
+   // if false then like the post
+   // await Post.findByIdAndUpdate(
+   //    req.params.postId,
+   //    {
+   //       $push: { likeBy: req.user._id },
+   //    },
+   //    { new: false, upsert: true }
+   // );
+   post.likeBy.push(req.params.postId);
+   await post.save();
    response(res, 200, 'liked');
 });
 
 exports.HttpUnlikePost = AsyncError(async (req, res, next) => {
+   //find the post,if the user liked the post, then unliked the post
+   const post = await Post.findById(req.params.postId);
+   // post.likeBy.
    await Post.findByIdAndUpdate(req.params.postId, {
       $pull: { likeBy: req.user._id },
    });
